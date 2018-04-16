@@ -35,6 +35,11 @@ def preprocesing():
                 if(lexem != ('\n')):
                     list_token.append([lexem,"tkn_undefined",num_line])
         num_line +=1    
+
+#***************************************************************************************
+def print_lt():
+    for token in list_token:
+        print (token)
 #***************************************************************************************
 
 
@@ -78,26 +83,39 @@ def tokens():
                 #bitacora
 #***************************************************************************************
 
+
 table_sim = {}
 
 def tabla_sim():
     for id in range(0,len(list_token)):
         if list_token[id][1] == "tkn_id":
-            if not list_token[id][0] in table_sim:
-                table_sim[list_token[id][0]] ={'Lexem': list_token[id][0], 'Value': '','Tam': '', 'Data_type':'','Line': [list_token[id][2]]}
+            if list_token[id+1][1] == "=":
+                if list_token[id+2][1]=="tkn_num" or list_token[id+2][1]=="tkn_varchar"  :
+                    
+                    if not list_token[id][0] in table_sim:
+                        table_sim[list_token[id][0]] ={'Lexem': list_token[id][1],'Value': list_token[id+2][0],
+                        'Len': len(list_token[id][0]), 'Data_type':list_token[id+2][1],'Line': list_token[id][2]}
+                    else:
+                        table_sim[list_token[id][0]]['Line'].append(list_token[id][2])
+            
             else:
-                table_sim[list_token[id][0]]['Line'].append(list_token[id][2])
+                if not list_token[id][0] in table_sim:
+                    table_sim[list_token[id][0]] ={'Lexem':     list_token[id][1], 'Value': '',
+                    'Len': len(list_token[id][0]), 'Data_type':'tkn_varchar','Line': list_token[id][2]}
+                else:
+                    table_sim[list_token[id][0]]['Line'].append(list_token[id][2])
 
 #***************************************************************************************
 
-def print_ts():
+def print_TS():
     for key in table_sim:
         print (key, ":", table_sim[key])
 #***************************************************************************************
 
 
+
 preprocesing()
 tokens()
-#print (list_token)
+print_lt()
 tabla_sim()
 print_TS()
