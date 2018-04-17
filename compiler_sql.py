@@ -28,7 +28,7 @@ def preprocesing():
         uncommetns = remove_comments(renglon)
         uncommetns = uncommetns.split(' ')
         for word in  uncommetns:
-            separators= r"([+]|-|[*]|[/]|;|,|=|<=|>=|<|>|[(]|[)]|[[]|[]]|{|})"
+            separators= r"([+]|-|[*]|;|,|=|<=|>=|<|>|[(]|[)]|[[]|[]]|{|})"
             splits= re.split(separators, word)
             list_splits = filter(None,splits)
             for lexem in list_splits:
@@ -45,7 +45,11 @@ def print_lt():
 
 # Tokens Diccionary 
 tkn_id = re.compile('[a-zA-Z]+[a-zA-Z1-9_]*')
-tkn_num = re.compile('[0-9]+')
+tkn_num_int = re.compile('[0-9]+')
+tkn_num_float = re.compile('[0-9]+.[0-9]+')
+tkn_num_date = re.compile('\"[0-9]+\/[0-9]+\/[0-9]+\"')
+tkn_num_time= re.compile('\"[0-9]+:[0-9]+:[0-9]+\"')
+tkn_string = re.compile('\"[a-zA-Z]+[a-zA-Z1-9_]*\"')
 
 tkn_list = [["int","tkn_int"],["varchar","tkn_varchar"],["date","tkn_date"],["time","tkn_time"],
             ["select","tkn_select"],["insert","tkn_insert"],["update","tkn_update"],["delete","tkn_delete"],
@@ -72,15 +76,42 @@ def tokens():
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_id"
                 else:
-                    print ("Error string not found in the line: ", list_token[token][2])
-
-            elif re.match(tkn_num, list_token[token][0]):
-                m = re.match(tkn_num, list_token[token][0])
+                    print ("Error string not found in the line: ", list_token[token][0])
+            
+            elif re.match(tkn_num_date, list_token[token][0]):
+                m = re.match(tkn_num_date, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
-                    list_token[token][1] = "tkn_num"
+                    list_token[token][1] = "tkn_num_date"
                 else:
-                    print ("Error string not found in the line: ", list_token[token][2])
-                #bitacora
+                    print ("Error string not found in the line: ", list_token[token][0])
+            elif re.match(tkn_num_time, list_token[token][0]):
+                m = re.match(tkn_num_time, list_token[token][0])
+                if len(m.group(0)) == len(list_token[token][0]):
+                    list_token[token][1] = "tkn_num_time"
+                else:
+                    print ("Error string not found in the line: ", list_token[token][0])
+            # if re.match(tkn_string, list_token[token][0]):
+            elif re.match(tkn_num_float, list_token[token][0]):
+                m = re.match(tkn_num_float, list_token[token][0])
+                if len(m.group(0)) == len(list_token[token][0]):
+                    list_token[token][1] = "tkn_num_float"
+                else:
+                    print ("Error string not found in the line: ", list_token[token][0])
+            #     m = re.match(tkn_string, list_token[token][0])
+            elif re.match(tkn_num_int, list_token[token][0]):
+                m = re.match(tkn_num_int, list_token[token][0])
+                if len(m.group(0)) == len(list_token[token][0]):
+                    list_token[token][1] = "tkn_num_int"
+                else:
+                    print ("Error string not found in the line: ", list_token[token][0])
+            
+            elif re.match(tkn_string, list_token[token][0]):
+                m = re.match(tkn_string, list_token[token][0])
+                if len(m.group(0)) == len(list_token[token][0]):
+                    list_token[token][1] = "tkn_string"
+                else:
+                    print ("Error string not found in the line: ", list_token[token][0])
+            #     #bitacora
 #***************************************************************************************
 
 
@@ -117,5 +148,5 @@ def print_TS():
 preprocesing()
 tokens()
 print_lt()
-tabla_sim()
-print_TS()
+# tabla_sim()
+# print_TS()
