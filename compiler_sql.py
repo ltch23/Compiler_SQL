@@ -28,7 +28,7 @@ def preprocesing():
         uncommetns = remove_comments(renglon)
         uncommetns = uncommetns.split(' ')
         for word in  uncommetns:
-            separators= r"([+]|-|[*]|;|,|<=|>=|<|>|=|\n|[(]|[)]|[[]|[]]|{|})"
+            separators= r"([+]|-|[*]|;|,|<=|>=|<|>|=|[.]|\n|[(]|[)]|[[]|[]]|{|})"
             splits= re.split(separators, word)
             list_splits = filter(None,splits)
             for lexem in list_splits:
@@ -44,6 +44,8 @@ def print_lt():
 
 
 # Tokens Diccionary 
+
+tkn_point = re.compile('.')
 tkn_id = re.compile('[a-zA-Z]+[a-zA-Z1-9_]*')
 tkn_num_int = re.compile('[0-9]+')
 tkn_num_float = re.compile('[0-9]+.[0-9]+')
@@ -74,8 +76,14 @@ def tokens():
                 m = re.match(tkn_id, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_id"
-                else:
-                    print ("Error string not found in the line: ", list_token[token][2])
+                    if token < len(list_token)-1:   
+                        if re.match(tkn_point, list_token[token+1][0]):
+                            m = re.match(tkn_point, list_token[token+1][0])
+                            if len(m.group(0)) == len(list_token[token+1][0]):
+                                list_token[token+1][1] = "tkn_point"
+                    
+                # else:
+                #     print ("Error string not found in the line: ", list_token[token][2])
             
             elif re.match(tkn_varchar, list_token[token][0]):
                 m = re.match(tkn_varchar, list_token[token][0])
@@ -111,11 +119,11 @@ def tokens():
                     print ("Error string not found in the line: ", list_token[token][2])
             
 
-            if list_token[token][1]=="tkn_undefined":
-                print("print ",[list_token[token][0],list_token[token][1],list_token[token][2]])
-                list_token[token].pop()
-                list_token[token].pop()
-                list_token[token].pop()
+            # if list_token[token][1]=="tkn_undefined":
+            #     print("print ",[list_token[token][0],list_token[token][1],list_token[token][2]])
+            #     list_token[token].pop()
+            #     list_token[token].pop()
+            #     list_token[token].pop()
             #     #bitacora
 #***************************************************************************************
 
@@ -124,7 +132,7 @@ table_sim = {}
 
 def tabla_sim():
     for t in range(0,len(list_token)):
-        if list_token[t][1] == "tkn_id" and list_token[t]:
+        if list_token[t][1] == "tkn_id": # and list_token[t][1] != "tkn_undefined":
             if list_token[t][0] not in table_sim:
                  table_sim[list_token[t][0]]= {'Lexem':list_token[t][1], 'Value': '','Len': len(list_token[t][0]), 'Data_type':'','Line': list_token[t][2]}
             # if  list_token[id][0] in table_sim:
@@ -139,18 +147,18 @@ def print_TS():
 
 
 
-terminales = {
+terminals = {
 'tkn_select':1,'tkn_insert':2,'tkn_update':3,'tkn_delete':4,'tkn_avg':5,'tkn_sum':6,'tkn_count':7,'tkn_from':8,'tkn_inner_join':9,'tkn_on':10,'tkn_where':11,'tkn_group_by':12,'tkn_order_by':13,'tkn_values':14,'tkn_set':15,'tkn_*':16,'tkn_id':17,'tkn_.':18,'tkn_(':19,'tkn_)':20,'tk_and':21,'tkn_or':22,'tkn_<':23,'tkn_>':24,'tkn_<=':25,'tkn_>=':26,'tkn_=':27,'tkn_,':28,'tkn_int':29,'tkn_float':30,'tkn_time':31,'tkn_date':32,'tkn_varchar':33,'$':34,
 }
 
 
-noTerminales = {
+no_terminals = {
 'A':1,'S':2,'F':3,'J':4,'W':5,'G':6,'I':7,'U':8,'op_rel':9,'op_com':10,'numeros':11,'valor_s':12,'valor_c':13,'valores':14,'id_tmp':15,'id_sim':16,'id_com':17,'ids':18,'C':19,'id_val':20,'cond_sim':21,'cond_com':22,'conditions':23,'set_sim':24,'set_com':25,'sets':26,
 }
 
 
 
-tablaSintactica = {
+table_syntactic = {
 1:['tkn_select', 'S','F','J','W','G'],   2:['tkn_insert_into', 'I'], 3:['tkn_update', 'U','W'], 4:['tkn_delete','F','W'], 5:[''],6:[''],7:[''],8:[''],9:[''],10:[''],11:[''],12:[''],13:[''],14:[''],15:[''],16:[''],17:[''],18:[''],19:[''],20:[''],21:[''],22:[''],23:[''],24:[''],25:[''],26:[''],27:[''],28:[''],29:[''],30:[''],31:[''],32:[''],33:[''],34:[''],
 
 35:[''],36:[''],37:[''],38:[''],39:['C','tkn_(','ids','tkn_)'],40:['C','tkn_(','ids','tkn_)'],41:['C','tkn_(','ids','tkn_)'],42:[''],43:[''],44:[''],45:[''],46:[''],47:[''],48:[''],49:[''],50:['tkn_*'],51:['ids'],52:[''],53:[''],54:[''],55:[''],56:[''],57:[''],58:[''],59:[''],60:[''],61:[''],62:[''],63:[''],64:[''],65:[''],66:[''],67:[''],68:[''],
@@ -206,8 +214,53 @@ tablaSintactica = {
 
 
 
+def tabla_syntac():
+    while(len(l_imput)>0) :
+        print ("Pila:", pila[::-1])
+        print ("l_imput:", l_imput)
+        
+        if pila[0] in terminals:
+            if (l_imput[0] == pila[0]):
+                print("- ",l_imput[0],pila[0])
+                if l_imput[0] == '$' and pila[0] == '$':
+                    print("String acepted")
+                pila.pop(0)
+                l_imput.pop(0)
+                l_lexem.pop(0)
+            else:
+                print("Error syntactic:  Token was not expected", l_imput[0])
+                pila.pop(0)
+                l_imput.pop(0)
+                l_lexem.pop(0)
+
+        else:
+            #Si es entero -> es regla Ejécutala (con q params?)
+            if pila[0].isdigit():
+                pila.pop(0)
+            else:
+                # saco y pongo al revez
+                row = no_terminals[pila[0]] - 1
+
+                col = terminals[l_imput[0]]
+                print("row ",row," col ",col)
+                empila = table_syntactic[row * 34 + col]
+                print ("data", row * 34 + col)
+                empilar = empila[::-1]
+                print ('empila: ', empilar)
+                pila.pop(0)
+                for j in range(0,len(empilar)):
+                    if(empilar[j] == ''):
+                        print("Error syntactic:  Token was not expected inn the Table Syntactic ",l_imput[0])
+                        l_imput.pop(0)
+                        l_lexem.pop(0)
+                        print ("e:" ,l_imput)
+                        print ("l:" ,l_lexem)
+                    elif(empilar[j] != 'vacio'):
+                        pila.insert(0,empilar[j])
 
 
+        if not pila:
+            return
 
 
 
@@ -221,71 +274,25 @@ print_lt()
 tabla_sim()
 print_TS()
 
-# print(tablaSintactica)
 pila=['A','$']
-entrada = []
-lexema = []  #Contendrá los lexemnas de los tkn_Identificadores para ubicarlos en la TS
+l_imput = []
+l_lexem = []  
 
 
 
 for x in range(0, len(list_token)):
-    entrada.append(list_token[x][1])
-    lexema.append(list_token[x][0])
+    l_imput.append(list_token[x][1])
+    l_lexem.append(list_token[x][0])
 
-entrada.append('$')
-lexema.append('$')
+l_imput.append('$')
+l_lexem.append('$')
 
 
 print ('**************************************')
-print ("entrada ",entrada)
-print ("lexema ",lexema)
+print ("l_imput ",l_imput)
+print ("l_lexem ",l_lexem)
 print ("pila ",pila)
 
 
 
-def tablaSintac():
-    while(len(entrada)>0):
-        print ("Pila:", pila[::-1])
-        print ("Entrada:", entrada)
-        
-        if pila[0] in terminales:
-            if (entrada[0] == pila[0]):
-                print("- ",entrada[0],pila[0])
-                if entrada[0] == '$' and pila[0] == '$':
-                    print("Cadena aceptada sintacticamente")
-                pila.pop(0)
-                entrada.pop(0)
-                lexema.pop(0)
-            else:
-                print("Error sintactico: No se esperaba Token", entrada[0])
-                pila.pop(0)
-                entrada.pop(0)
-                lexema.pop(0)
-
-        else:
-            #Si es entero -> es regla Ejécutala (con q params?)
-            if pila[0].isdigit():
-                pila.pop(0)
-            else:
-                # saco y pongo al revez
-                fila = noTerminales[pila[0]] - 1
-
-                columna = terminales[entrada[0]]
-                print("fila ",fila," col ",columna)
-                empila = tablaSintactica[fila * 34 + columna]
-                print ("data", fila * 34 + columna)
-                empilar = empila[::-1]
-                print ('empila: ', empilar)
-                pila.pop(0)
-                for j in range(0,len(empilar)):
-                    if(empilar[j] == ''):
-                        print("Error sintactico: No se encuentra Token en la Tabla Sintactica ",entrada[0])
-                        entrada.pop(0)
-                        lexema.pop(0)
-                    elif(empilar[j] != 'vacio'):
-                        pila.insert(0,empilar[j])
-
-
-
-
-tablaSintac()
+tabla_syntac()
