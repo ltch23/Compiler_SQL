@@ -5,7 +5,7 @@ data = file.readlines()
 file.close()
 list_token = []
 
-print ("data: ",data)
+# print ("data: ",data)
 
 
 def remove_comments(string):
@@ -19,7 +19,16 @@ def remove_comments(string):
         string = re.sub(re.compile(".*?\*"), "", string) # Remove comment/* 
    
     return string
-#***************************************************************************************
+#***************************************************************************************# Tokens Diccionary 
+tkn_point = re.compile('.')
+tkn_id = re.compile('[a-zA-Z]+[a-zA-Z1-9_]*')
+tkn_num_int = re.compile('[0-9]+')
+tkn_num_float = re.compile('[0-9]+.[0-9]+')
+tkn_num_date = re.compile('\"[0-9]+\/[0-9]+\/[0-9]+\"')
+tkn_num_time= re.compile('\"[0-9]+:[0-9]+:[0-9]+\"')
+tkn_varchar = re.compile('\"[a-zA-Z]+[a-zA-Z1-9_]*\"')
+
+#*************************************************************************************
 
 def preprocesing():
     num_line = 1
@@ -28,10 +37,22 @@ def preprocesing():
         uncommetns = remove_comments(renglon)
         uncommetns = uncommetns.split(' ')
         for word in  uncommetns:
-            separators= r"([+]|-|[*]|;|,|<=|>=|<|>|=|[.]|\n|[(]|[)]|[[]|[]]|{|})"
+            separators= r"([+]|-|[*]|;|,|<=|>=|<|>|=|\n|[(]|[)]|[[]|[]]|{|})"
             splits= re.split(separators, word)
             list_splits = filter(None,splits)
+            
             for lexem in list_splits:
+                tmp= re.split(r"([.])", lexem)
+                if re.match(tkn_id, tmp[0]):
+                    m = re.match(tkn_id, tmp[0])
+                    if len(m.group(0)) == len(tmp[0]):
+                        if len(tmp)==3:   
+                            if tmp[1]==".":
+                                lexem=('\n')
+                                list_token.append([tmp[0],"tkn_undefined",num_line])
+                                list_token.append([tmp[1],"tkn_undefined",num_line])
+                                list_token.append([tmp[2],"tkn_undefined",num_line])
+                                    # print(len(tmp))   
                 if(lexem != ('\n')):
                     list_token.append([lexem,"tkn_undefined",num_line])
         num_line +=1    
@@ -43,19 +64,10 @@ def print_lt():
 #***************************************************************************************
 
 
-# Tokens Diccionary 
 
-tkn_point = re.compile('.')
-tkn_id = re.compile('[a-zA-Z]+[a-zA-Z1-9_]*')
-tkn_num_int = re.compile('[0-9]+')
-tkn_num_float = re.compile('[0-9]+.[0-9]+')
-tkn_num_date = re.compile('\"[0-9]+\/[0-9]+\/[0-9]+\"')
-tkn_num_time= re.compile('\"[0-9]+:[0-9]+:[0-9]+\"')
-tkn_varchar = re.compile('\"[a-zA-Z]+[a-zA-Z1-9_]*\"')
-
-tkn_list = [["select","tkn_select"],["insert","tkn_insert"],["update","tkn_update"],["delete","tkn_delete"],
+tkn_list = [["select","tkn_select"],["insert","tkn_insert_into"],["update","tkn_update"],["delete","tkn_delete"],
             ["from","tkn_from"],["where","tkn_where"],["*","tkn_*"], ["avg","tkn_avg"],["sum","tkn_sum"],["count","tkn_count"],
-            ["group_by","tkn_group_by"],["inner_join","tkn_inner_join"],["on","tkn_on"],["values","tkn_values"],["set","tkn_set"],
+            ["group_by","tkn_group_by"],["order_by","tkn_order_by"],["inner_join","tkn_inner_join"],["on","tkn_on"],["values","tkn_values"],["set","tkn_set"],
             ["(","tkn_("],[")","tkn_)"],[";",";"],[",","tkn_,"],
             ["=","tkn_="],["<","tkn_<"],[">","tkn_>"],["<=","tkn_<="],[">=","tkn_>="],
             ["and","tkn_and"],["or","tkn_or"],["not","tkn_not"],
@@ -76,54 +88,61 @@ def tokens():
                 m = re.match(tkn_id, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_id"
-                    if token < len(list_token)-1:   
-                        if re.match(tkn_point, list_token[token+1][0]):
-                            m = re.match(tkn_point, list_token[token+1][0])
-                            if len(m.group(0)) == len(list_token[token+1][0]):
-                                list_token[token+1][1] = "tkn_point"
+                    # if token < len(list_token)-1:   
+                    #     if re.match(tkn_point, list_token[token+1][0]):
+                    #         m = re.match(tkn_point, list_token[token+1][0])
+                    #         if len(m.group(0)) == len(list_token[token+1][0]):
+                    #             list_token[token+1][1] = "tkn_."
                     
                 # else:
                 #     print ("Error string not found in the line: ", list_token[token][2])
             
-            elif re.match(tkn_varchar, list_token[token][0]):
+            if re.match(tkn_varchar, list_token[token][0]):
                 m = re.match(tkn_varchar, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_varchar"
-                else:
-                    print ("Error string not found in the line: ", list_token[token][2])
-            elif re.match(tkn_num_date, list_token[token][0]):
+                # else:
+                #     print ("Error string not found in the line: ", list_token[token][2])
+
+            if re.match(tkn_point, list_token[token][0]):
+                m = re.match(tkn_point, list_token[token][0])
+                if len(m.group(0)) == len(list_token[token][0]):
+                    list_token[token][1] = "tkn_."
+                # else:
+                #     print ("Error string not found in the line: ", list_token[token][2])
+            if re.match(tkn_num_date, list_token[token][0]):
                 m = re.match(tkn_num_date, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_date"
-                else:
-                    print ("Error string not found in the line: ", list_token[token][2])
-            elif re.match(tkn_num_time, list_token[token][0]):
+                # else:
+                #     print ("Error string not found in the line: ", list_token[token][2])
+            if re.match(tkn_num_time, list_token[token][0]):
                 m = re.match(tkn_num_time, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_time"
                 else:
                     print ("Error string not found in the line: ", list_token[token][2])
             # if re.match(tkn_varchar, list_token[token][0]):
-            elif re.match(tkn_num_float, list_token[token][0]):
+            if re.match(tkn_num_float, list_token[token][0]):
                 m = re.match(tkn_num_float, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_float"
-                else:
-                    print ("Error string not found in the line: ", list_token[token][2])
+                # else:
+                #     print ("Error string not found in the line: ", list_token[token][2])
             #     m = re.match(tkn_varchar, list_token[token][0])
-            elif re.match(tkn_num_int, list_token[token][0]):
+            if re.match(tkn_num_int, list_token[token][0]):
                 m = re.match(tkn_num_int, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_int"
-                else:
-                    print ("Error string not found in the line: ", list_token[token][2])
+                # else:
+                #     print ("Error string not found in the line: ", list_token[token][2])
             
 
-            # if list_token[token][1]=="tkn_undefined":
-            #     print("print ",[list_token[token][0],list_token[token][1],list_token[token][2]])
-            #     list_token[token].pop()
-            #     list_token[token].pop()
-            #     list_token[token].pop()
+            if list_token[token][1]=="tkn_undefined":
+                print("print ",[list_token[token][0],list_token[token][1],list_token[token][2]])
+                list_token[token].pop()
+                list_token[token].pop()
+                list_token[token].pop()
             #     #bitacora
 #***************************************************************************************
 
@@ -148,7 +167,7 @@ def print_TS():
 
 
 terminals = {
-'tkn_select':1,'tkn_insert':2,'tkn_update':3,'tkn_delete':4,'tkn_avg':5,'tkn_sum':6,'tkn_count':7,'tkn_from':8,'tkn_inner_join':9,'tkn_on':10,'tkn_where':11,'tkn_group_by':12,'tkn_order_by':13,'tkn_values':14,'tkn_set':15,'tkn_*':16,'tkn_id':17,'tkn_.':18,'tkn_(':19,'tkn_)':20,'tk_and':21,'tkn_or':22,'tkn_<':23,'tkn_>':24,'tkn_<=':25,'tkn_>=':26,'tkn_=':27,'tkn_,':28,'tkn_int':29,'tkn_float':30,'tkn_time':31,'tkn_date':32,'tkn_varchar':33,'$':34,
+'tkn_select':1,'tkn_insert_into':2,'tkn_update':3,'tkn_delete':4,'tkn_avg':5,'tkn_sum':6,'tkn_count':7,'tkn_from':8,'tkn_inner_join':9,'tkn_on':10,'tkn_where':11,'tkn_group_by':12,'tkn_order_by':13,'tkn_values':14,'tkn_set':15,'tkn_*':16,'tkn_id':17,'tkn_.':18,'tkn_(':19,'tkn_)':20,'tkn_and':21,'tkn_or':22,'tkn_<':23,'tkn_>':24,'tkn_<=':25,'tkn_>=':26,'tkn_=':27,'tkn_,':28,'tkn_int':29,'tkn_float':30,'tkn_time':31,'tkn_date':32,'tkn_varchar':33,'$':34,
 }
 
 
@@ -169,7 +188,7 @@ table_syntactic = {
 
 137:[''],138:[''],139:[''],140:[''],141:[''],142:[''],143:[''],144:[''],145:[''],146:[''],147:['tkn_where','conditions'],148:['vacio'],149:[''],150:[''],151:[''],152:[''],153:[''],154:[''],155:[''],156:[''],157:[''],158:[''],159:[''],160:[''],161:[''],162:[''],163:[''],164:[''],165:[''],166:[''],167:[''],168:[''],169:[''],170:['vacio'],
 
-171:[''],172:[''],173:[''],174:[''],175:[''],176:[''],177:[''],178:[''],179:[''],180:[''],181:[''],182:[''],183:['tkn_group_by','ids','tkn_order_by','ids'],184:[''],185:[''],186:[''],187:[''],188:[''],189:[''],190:[''],191:[''],192:[''],193:[''],194:[''],195:[''],196:[''],197:[''],198:[''],199:[''],200:[''],201:[''],202:[''],203:[''],204:['vacio'],
+171:[''],172:[''],173:[''],174:[''],175:[''],176:[''],177:[''],178:[''],179:[''],180:[''],181:[''],182:['tkn_group_by','ids','tkn_order_by','ids'],183:['tkn_group_by','ids','tkn_order_by','ids'],184:[''],185:[''],186:[''],187:[''],188:[''],189:[''],190:[''],191:[''],192:[''],193:[''],194:[''],195:[''],196:[''],197:[''],198:[''],199:[''],200:[''],201:[''],202:[''],203:[''],204:['vacio'],
 
 205:[''],206:[''],207:[''],208:[''],209:[''],210:[''],211:[''],212:[''],213:[''],214:[''],215:[''],216:[''],217:[''],218:[''],219:[''],220:[''],221:['id_sim','tkn_values','tkn_(','valores','tkn_)'],222:[''],223:[''],224:[''],225:[''],226:[''],227:[''],228:[''],229:[''],230:[''],231:[''],232:[''],233:[''],234:[''],235:[''],236:[''],237:[''],238:[''],
 
@@ -207,7 +226,7 @@ table_syntactic = {
 
 783:[''],784:[''],785:[''],786:[''],787:[''],788:[''],789:[''],790:[''],791:[''],792:[''],793:[''],794:[''],795:[''],796:[''],797:[''],798:[''],799:['id_sim','tkn_=','valor_s'],800:[''],801:[''],802:[''],803:[''],804:[''],805:[''],806:[''],807:[''],808:[''],809:[''],810:[''],811:[''],812:[''],813:[''],814:[''],815:[''],816:[''],
 
-817:[''],818:[''],819:[''],820:[''],821:[''],822:[''],823:[''],824:[''],825:[''],826:[''],827:['vacio'],828:[''],829:[''],830:[''],831:[''],832:[''],833:[''],834:[''],835:[''],836:[''],837:[''],838:[''],839:[''],840:[''],841:[''],842:[''],843:[''],844:[''],845:['tkn_,','set_sim','set_com'],846:[''],847:[''],848:[''],849:[''],850:['vacio'],
+817:[''],818:[''],819:[''],820:[''],821:[''],822:[''],823:[''],824:[''],825:[''],826:[''],827:['vacio'],828:[''],829:[''],830:[''],831:[''],832:[''],833:[''],834:[''],835:[''],836:[''],837:[''],838:[''],839:[''],840:[''],841:[''],842:[''],843:[''],844:['tkn_,','set_sim','set_com'],845:[''],846:[''],847:[''],848:[''],849:[''],850:['vacio'],
 
 851:[''],852:[''],853:[''],854:[''],855:[''],856:[''],857:[''],858:[''],859:[''],860:[''],861:[''],862:[''],863:[''],864:[''],865:[''],866:[''],867:['set_sim','set_com'],868:[''],869:[''],870:[''],871:[''],872:[''],873:[''],874:[''],875:[''],876:[''],877:[''],878:[''],879:[''],880:[''],881:[''],882:[''],883:[''],884:[''],
 }
@@ -217,7 +236,7 @@ table_syntactic = {
 def tabla_syntac():
     while(len(l_imput)>0) :
         print ("Pila:", pila[::-1])
-        print ("l_imput:", l_imput)
+        print ("lexema:", l_lexem)
         
         if pila[0] in terminals:
             if (l_imput[0] == pila[0]):
@@ -242,9 +261,8 @@ def tabla_syntac():
                 row = no_terminals[pila[0]] - 1
 
                 col = terminals[l_imput[0]]
-                print("row ",row," col ",col)
+                print("row ",row," col ",col,   "data", row * 34 + col)
                 empila = table_syntactic[row * 34 + col]
-                print ("data", row * 34 + col)
                 empilar = empila[::-1]
                 print ('empila: ', empilar)
                 pila.pop(0)
@@ -253,8 +271,8 @@ def tabla_syntac():
                         print("Error syntactic:  Token was not expected inn the Table Syntactic ",l_imput[0])
                         l_imput.pop(0)
                         l_lexem.pop(0)
-                        print ("e:" ,l_imput)
-                        print ("l:" ,l_lexem)
+                        # print ("e:" ,l_imput)
+                        # print ("l:" ,l_lexem)
                     elif(empilar[j] != 'vacio'):
                         pila.insert(0,empilar[j])
 
