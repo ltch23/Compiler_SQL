@@ -153,8 +153,11 @@ def tabla_sim():
     for t in range(0,len(list_token)):
         if list_token[t][1] == "tkn_id": # and list_token[t][1] != "tkn_undefined":
             if list_token[t][0] not in table_sim:
-                 table_sim[list_token[t][0]]= {'Lexem':list_token[t][1], 'Value': '','Len': len(list_token[t][0]), 'Data_type':'','Line': list_token[t][2]}
-            # if  list_token[id][0] in table_sim:
+                 table_sim[list_token[t][0]]= {'Lexem':list_token[t][1], 'Value': '','Len': len(list_token[t][0]), 'Data_type':'','ifTC':'','Line': list_token[t][2]}
+
+            # else:
+
+
                  # table_sim[list_token[id][0]]['Line'].append(list_token[id][2])
 
 #***************************************************************************************
@@ -190,9 +193,9 @@ table_syntactic = {
 
 171:[''],172:[''],173:[''],174:[''],175:[''],176:[''],177:[''],178:[''],179:[''],180:[''],181:[''],182:['tkn_group_by','ids','tkn_order_by','ids'],183:['tkn_group_by','ids','tkn_order_by','ids'],184:[''],185:[''],186:[''],187:[''],188:[''],189:[''],190:[''],191:[''],192:[''],193:[''],194:[''],195:[''],196:[''],197:[''],198:[''],199:[''],200:[''],201:[''],202:[''],203:[''],204:['vacio'],
 
-205:[''],206:[''],207:[''],208:[''],209:[''],210:[''],211:[''],212:[''],213:[''],214:[''],215:[''],216:[''],217:[''],218:[''],219:[''],220:[''],221:['id_sim','tkn_values','tkn_(','valores','tkn_)'],222:[''],223:[''],224:[''],225:[''],226:[''],227:[''],228:[''],229:[''],230:[''],231:[''],232:[''],233:[''],234:[''],235:[''],236:[''],237:[''],238:[''],
+205:[''],206:[''],207:[''],208:[''],209:[''],210:[''],211:[''],212:[''],213:[''],214:[''],215:[''],216:[''],217:[''],218:[''],219:[''],220:[''],221:['tkn_id','tkn_values','tkn_(','valores','tkn_)'],222:[''],223:[''],224:[''],225:[''],226:[''],227:[''],228:[''],229:[''],230:[''],231:[''],232:[''],233:[''],234:[''],235:[''],236:[''],237:[''],238:[''],
 
-239:[''],240:[''],241:[''],242:[''],243:[''],244:[''],245:[''],246:[''],247:[''],248:[''],249:[''],250:[''],251:[''],252:[''],253:[''],254:[''],255:['id_sim','tkn_set','sets'],256:[''],257:[''],258:[''],259:[''],260:[''],261:[''],262:[''],263:[''],264:[''],265:[''],266:[''],267:[''],268:[''],269:[''],270:[''],271:[''],272:[''],
+239:[''],240:[''],241:[''],242:[''],243:[''],244:[''],245:[''],246:[''],247:[''],248:[''],249:[''],250:[''],251:[''],252:[''],253:[''],254:[''],255:['tkn_id','tkn_set','sets'],256:[''],257:[''],258:[''],259:[''],260:[''],261:[''],262:[''],263:[''],264:[''],265:[''],266:[''],267:[''],268:[''],269:[''],270:[''],271:[''],272:[''],
 
 273:[''],274:[''],275:[''],276:[''],277:[''],278:[''],279:[''],280:[''],281:[''],282:[''],283:[''],284:[''],285:[''],286:[''],287:[''],288:[''],289:[''],290:[''],291:[''],292:[''],293:['tkn_and'],294:['tkn_or'],295:[''],296:[''],297:[''],298:[''],299:[''],300:[''],301:[''],302:[''],303:[''],304:[''],305:[''],306:[''],
 
@@ -240,47 +243,48 @@ def tabla_syntac():
         
         if pila[0] in terminals:
             if (l_imput[0] == pila[0]):
-                print("- ",l_imput[0],pila[0])
+                # print("- ",l_imput[0],pila[0])
                 if l_imput[0] == '$' and pila[0] == '$':
                     print("String acepted")
                 pila.pop(0)
                 l_imput.pop(0)
                 l_lexem.pop(0)
+                l_line.pop(0)
             else:
-                print("Error syntactic:  Token was not expected", l_imput[0])
+                print("Error syntactic-  Token was not expected:" , l_imput[0],"line: ",l_line[0])
                 pila.pop(0)
                 l_imput.pop(0)
                 l_lexem.pop(0)
+                l_line.pop(0)
 
         else:
-            #Si es entero -> es regla Ejécutala (con q params?)
-            if pila[0].isdigit():
-                pila.pop(0)
-            else:
-                # saco y pongo al revez
+            # if pila[0].isdigit():
+            #     pila.pop(0)
+            # else:
                 row = no_terminals[pila[0]] - 1
 
                 col = terminals[l_imput[0]]
-                print("row ",row," col ",col,   "data", row * 34 + col)
+                # print("row ",row," col ",col,   "data", row * 34 + col)
                 empila = table_syntactic[row * 34 + col]
                 empilar = empila[::-1]
                 print ('empila: ', empilar)
                 pila.pop(0)
                 for j in range(0,len(empilar)):
                     if(empilar[j] == ''):
-                        print("Error syntactic:  Token was not expected inn the Table Syntactic ",l_imput[0])
+                        print(">Error syntactic:  Token was not expected:" , l_imput[0],"line: ",l_line[0])
+                        
+                        # pila.pop(0)
                         l_imput.pop(0)
                         l_lexem.pop(0)
+                        l_line.pop(0)
                         # print ("e:" ,l_imput)
                         # print ("l:" ,l_lexem)
                     elif(empilar[j] != 'vacio'):
                         pila.insert(0,empilar[j])
 
 
-        if not pila:
-            return
-
-
+        # if not pila:
+        #     return
 
 
 
@@ -295,12 +299,14 @@ print_TS()
 pila=['A','$']
 l_imput = []
 l_lexem = []  
+l_line = []  
 
 
 
 for x in range(0, len(list_token)):
     l_imput.append(list_token[x][1])
     l_lexem.append(list_token[x][0])
+    l_line.append(list_token[x][2])
 
 l_imput.append('$')
 l_lexem.append('$')
@@ -314,3 +320,156 @@ print ("pila ",pila)
 
 
 tabla_syntac()
+
+
+
+class NoTerminal:
+    def __init__(self):
+        self.lexem = None  #  acceder a  TS en la pos "lexema"
+        self.type = None
+        self.value = None
+        self.ifTC = None
+
+# Inicializar No Terminales
+# -----------------------------------------------------------------------------
+
+A = NoTerminal()
+S = NoTerminal()
+C = NoTerminal()
+F = NoTerminal()
+J = NoTerminal()
+W = NoTerminal()
+G = NoTerminal()
+I = NoTerminal()
+U = NoTerminal()
+op_rel = NoTerminal()
+op_com = NoTerminal()
+numeros = NoTerminal()
+valor_s = NoTerminal()
+valor_c = NoTerminal()
+valores = NoTerminal()
+id_tmp = NoTerminal()
+id_sim = NoTerminal()
+id_com = NoTerminal()
+ids = NoTerminal()
+id_val = NoTerminal()
+cond_sim = NoTerminal()
+cond_com = NoTerminal()
+conditions = NoTerminal()
+set_sim = NoTerminal()
+set_com = NoTerminal()
+sets = NoTerminal()
+
+
+# Reglas Semanticas
+def operacion(objeto1,objeto2,operador):
+    if operador == '+':
+        return objeto1 + objeto2
+    elif operador == '-':
+        return objeto1 - objeto2
+    elif operador == '=':
+        return objeto1 == objeto2
+    elif operador == '!=':
+        return objeto1 != objeto2
+    elif operador == '>=':
+        return objeto1 >= objeto2
+    elif operador == '<=':
+        return objeto1 <= objeto2
+    elif operador == '>':
+        return objeto1 > objeto2
+    elif operador == '<':
+        return objeto1 < objeto2
+
+def get_value(id):
+    return tabla_sim[id]['Value']
+
+def get_lexema(id):
+    return tabla_sim[id]['Lexema']
+
+def get_ifTC(id):
+    return tabla_sim[id]['ifTC']
+
+def get_type(id):
+    return tabla_sim[id]['Type']
+
+def set_value(id,value):
+    tabla_sim[id]['Value'] = value
+
+def set_type(id,type):
+    tabla_sim[id]['Type'] = type
+
+#tabla 0 - col 1
+def set_ifTC(id):
+    tabla_sim[id]['ifTC'] = 0 
+
+
+# Comprobación de types && Paso de Valor
+def rule_1(objeto1,objeto2):
+    if objeto1.type == objeto2.type:
+        objeto1.value = objeto2.value
+    else:
+        print ("Error de type")
+
+# Comprobacion de types && set_value
+def rule_2(objeto1,id):
+    if objeto1.type == get_type(id):
+        set_value(id,objeto1.value)
+    else:
+        print ("Error de type")
+
+# Paso de type
+def rule_3(objeto1, objeto2):
+    objeto1.type = objeto2.type
+
+# Sintetizado type
+def rule_4(objeto1, objeto2):
+    objeto1.type = objeto2
+
+# Paso de type && Paso de Lexema
+def rule_6(objeto1,objeto2,id):
+    objeto1.type = objeto2.type
+    objeto1.lexema = get_lexema(id)
+
+
+# Paso de type y Valor
+def rule_7(objeto1, objeto2):
+    objeto1.type = objeto2.type
+    objeto1.value = objeto2.value
+
+
+# get_type && get_value && get_lexema
+def rule_8(objeto1, id):
+    objeto1.type = get_type(id)
+    objeto1.value = get_value(id)
+    objeto1.lexema = get_lexema(id)
+
+
+
+# Sintetizado lexem
+def rule_9(objeto1, objeto2):
+    objeto1.lexema = objeto2
+
+# Paso de Lexema
+def rule_10(objeto1, objeto2):
+    objeto1.lexema = objeto2.lexema
+
+
+#Condicion o setting
+def rule_11(objeto1,objeto2):
+    if objeto1.type != objeto2.type:
+        print ("Error de type")
+
+# Operaciones Aritméticas
+def rule_op_ari(objeto1, objeto2,operador):
+    if objeto1.type == objeto2.type:
+        objeto1.value = operacion (objeto1.value,objeto2.value,operador.lexema)
+    print ("Error de type")
+
+# Operaciones comparaciob
+def rule_op_rel(objeto1, objeto2,objeto3, operador):
+    if objeto1.type == objeto2.type:
+        objeto3.value = operacion(objeto1.value, objeto2.value, operador.lexema)
+        objeto3.type = 'tkn_bool'
+    else:
+        print ("Error de types")
+
