@@ -181,7 +181,7 @@ no_terminals = {
 
 
 table_syntactic = {
-1:['tkn_select', 'S','F','J','W','G'],   2:['tkn_insert_into', 'I'], 3:['tkn_update', 'U','W'], 4:['tkn_delete','F','W'], 5:[''],6:[''],7:[''],8:[''],9:[''],10:[''],11:[''],12:[''],13:[''],14:[''],15:[''],16:[''],17:[''],18:[''],19:[''],20:[''],21:[''],22:[''],23:[''],24:[''],25:[''],26:[''],27:[''],28:[''],29:[''],30:[''],31:[''],32:[''],33:[''],34:[''],
+1:['tkn_select', 'S','F','J','W','G'],   2:['tkn_insert_into', 'I', '#1'], 3:['tkn_update', 'U','W'], 4:['tkn_delete','F','W'], 5:[''],6:[''],7:[''],8:[''],9:[''],10:[''],11:[''],12:[''],13:[''],14:[''],15:[''],16:[''],17:[''],18:[''],19:[''],20:[''],21:[''],22:[''],23:[''],24:[''],25:[''],26:[''],27:[''],28:[''],29:[''],30:[''],31:[''],32:[''],33:[''],34:[''],
 
 35:[''],36:[''],37:[''],38:[''],39:['C','tkn_(','ids','tkn_)'],40:['C','tkn_(','ids','tkn_)'],41:['C','tkn_(','ids','tkn_)'],42:[''],43:[''],44:[''],45:[''],46:[''],47:[''],48:[''],49:[''],50:['tkn_*'],51:['ids'],52:[''],53:[''],54:[''],55:[''],56:[''],57:[''],58:[''],59:[''],60:[''],61:[''],62:[''],63:[''],64:[''],65:[''],66:[''],67:[''],68:[''],
 
@@ -399,8 +399,92 @@ def set_type(id,type):
     tabla_sim[id]['Type'] = type
 
 #tabla 0 - col 1
-def set_ifTC(id):
-    tabla_sim[id]['ifTC'] = 0 
+def set_ifTC(id,val):
+    tabla_sim[id]['ifTC'] = val 
+
+
+# regla 0.0
+# operaciones aritmeticas
+def rule_op_ari(objeto1, objeto2,operador):
+    if objeto1.type == objeto2.type:
+        objeto1.value = operacion (objeto1.value,objeto2.value,operador.lexema)
+    print ("Error de type")
+
+# Operaciones comparacion
+def rule_op_rel(objeto1, objeto2,objeto3, operador):
+    if objeto1.type == objeto2.type:
+        objeto3.value = operacion(objeto1.value, objeto2.value, operador.lexema)
+        objeto3.type = 'tkn_bool'
+    else:
+        print ("Error de types")
+
+# regla 1.0
+def is_table(objeto):
+    if get_ifTC==0:
+       return True
+    else:
+        print("error no es tabla")
+        return False
+# regla 1.1
+# is false
+
+###########################################
+
+def find_db(id):
+    # open txt and find
+    # return true or false is exist
+    return True
+
+def insert_db(table,column,valor):
+    if find_db(table)==True
+    if find_db(column)==True
+    #
+    #
+
+
+def get_columns(objeto):
+    if find_db(get_lexema(objeto))== True
+        # columnas= get columnas of txt
+        return columns
+
+
+###########################################
+
+#regla 1.2 1.3 3.1 
+def pertenece(objeto1,objeto2):
+    columns=get_columns(objeto1)
+    for i in range(columnas):
+        if(objeto2.lex==i)
+            return True
+    print("no pertenece")
+    return False
+
+# insert_db()= insertar objeto1.lex en ves de objeto 2.lex 
+
+#regla 2.2 2.3
+
+def validar_columas(objeto):
+    columnas= # lista de insertar
+    columnas_db= get_columns(objeto)
+    if columnas.size() != columnas_db.size()
+        print("tamaño diferente")
+        return False
+    for i in range(columnas_db):
+        if pertenece(columnas[i], objeto) == True:
+            if columnas[i].type != columnas_db[i].type :
+                print("error tipo mal")
+                return False
+    return True
+
+
+#regla 3.2
+def asignar(objeto1,objeto2,operador):
+    if objeto1.type == objeto2.type:
+        if operador =="=":
+        else:
+            print("error")
+    else:
+        print("error")        
 
 
 # Comprobación de types && Paso de Valor
@@ -423,53 +507,28 @@ def rule_3(objeto1, objeto2):
 
 # Sintetizado type
 def rule_4(objeto1, objeto2):
-    objeto1.type = objeto2
+    objeto2.type = objeto1.type
 
-# Paso de type && Paso de Lexema
+# Paso de type y Paso de Lexema
 def rule_6(objeto1,objeto2,id):
     objeto1.type = objeto2.type
     objeto1.lexema = get_lexema(id)
-
 
 # Paso de type y Valor
 def rule_7(objeto1, objeto2):
     objeto1.type = objeto2.type
     objeto1.value = objeto2.value
 
-
-# get_type && get_value && get_lexema
+# get_type y get_value && get_lexema
 def rule_8(objeto1, id):
     objeto1.type = get_type(id)
     objeto1.value = get_value(id)
     objeto1.lexema = get_lexema(id)
 
-
-
 # Sintetizado lexem
 def rule_9(objeto1, objeto2):
-    objeto1.lexema = objeto2
+    objeto2.lexema = objeto1.lexema
 
 # Paso de Lexema
 def rule_10(objeto1, objeto2):
     objeto1.lexema = objeto2.lexema
-
-
-#Condicion o setting
-def rule_11(objeto1,objeto2):
-    if objeto1.type != objeto2.type:
-        print ("Error de type")
-
-# Operaciones Aritméticas
-def rule_op_ari(objeto1, objeto2,operador):
-    if objeto1.type == objeto2.type:
-        objeto1.value = operacion (objeto1.value,objeto2.value,operador.lexema)
-    print ("Error de type")
-
-# Operaciones comparaciob
-def rule_op_rel(objeto1, objeto2,objeto3, operador):
-    if objeto1.type == objeto2.type:
-        objeto3.value = operacion(objeto1.value, objeto2.value, operador.lexema)
-        objeto3.type = 'tkn_bool'
-    else:
-        print ("Error de types")
-
