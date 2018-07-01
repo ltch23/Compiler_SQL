@@ -6,6 +6,57 @@ file.close()
 list_token = []
 
 # print ("data: ",data)
+import sqlparse
+
+filename = 'diccionario.txt'
+with open(filename) as f:
+    ddata = f.readlines()
+
+def get_tables_ofDB():
+    tables=[]
+
+    for n, sql in enumerate(ddata, 1): # read the entire text
+        sql = sql.rstrip() 
+        parsed = sqlparse.parse(sql)
+        stmt = parsed[0]
+
+        string = str(stmt.tokens[0])
+        #    string = re.sub( re.compile("\)"),"" ,string)
+
+        #string = re.sub( re.compile("\("),"" ,string)
+        splits = string.split("(")
+
+        tables.append(splits[0])
+    return tables
+    # print(splits[0])
+
+
+def get_cols_of_tableDB(name_table):
+
+    columns=[]
+    for n, sql in enumerate(ddata, 1): # read the entire text
+        sql = sql.rstrip()
+        parsed = sqlparse.parse(sql)
+        stmt = parsed[0]
+        
+        string = str(stmt.tokens[0])
+        splits = string.split(" (")
+        table=splits[0]
+        
+        if str(name_table)==str(table):
+            string = re.sub( re.compile("\)"),"" ,splits[1])
+            string = re.sub( re.compile("\("),"" ,string)
+            splits = string.split(", ")
+            
+            for i in range(len(splits)):
+                split = splits[i].split(" ")
+                columns.append(split)
+            
+            return columns
+
+       # splits = splits.split(" ")
+    #print(splits)
+
 
 
 def remove_comments(string):
@@ -88,7 +139,7 @@ def tokens():
                 m = re.match(tkn_id, list_token[token][0])
                 if len(m.group(0)) == len(list_token[token][0]):
                     list_token[token][1] = "tkn_id"
-                    # if token < len(list_token)-1:   
+                    # if token < len(list_token)-1:     
                     #     if re.match(tkn_point, list_token[token+1][0]):
                     #         m = re.match(tkn_point, list_token[token+1][0])
                     #         if len(m.group(0)) == len(list_token[token+1][0]):
@@ -153,7 +204,7 @@ def tabla_sim():
     for t in range(0,len(list_token)):
         if list_token[t][1] == "tkn_id": # and list_token[t][1] != "tkn_undefined":
             if list_token[t][0] not in table_sim:
-                 table_sim[list_token[t][0]]= {'Lexem':list_token[t][1], 'Value': '','Len': len(list_token[t][0]), 'Data_type':'','Line': list_token[t][2]}
+                 table_sim[list_token[t][0]]= {'lexem':list_token[t][0], 'value': '','type':'','ifTC':'','line': list_token[t][2]}
             # if  list_token[id][0] in table_sim:
                  # table_sim[list_token[id][0]]['Line'].append(list_token[id][2])
 
@@ -182,7 +233,7 @@ table_syntactic = {
 
 35:[''],36:[''],37:[''],38:[''],39:['C','tkn_(','ids','tkn_)'],40:['C','tkn_(','ids','tkn_)'],41:['C','tkn_(','ids','tkn_)'],42:[''],43:[''],44:[''],45:[''],46:[''],47:[''],48:[''],49:[''],50:['tkn_*'],51:['ids'],52:[''],53:[''],54:[''],55:[''],56:[''],57:[''],58:[''],59:[''],60:[''],61:[''],62:[''],63:[''],64:[''],65:[''],66:[''],67:[''],68:[''],
 
-69:[''],70:[''],71:[''],72:[''],73:[''],74:[''],75:[''],76:['tkn_from','ids'],77:[''],78:[''],79:[''],80:[''],81:[''],82:[''],83:[''],84:[''],85:[''],86:[''],87:[''],88:[''],89:[''],90:[''],91:[''],92:[''],93:[''],94:[''],95:[''],96:[''],97:[''],98:[''],99:[''],100:[''],101:[''],102:[''],
+69:[''],70:[''],71:[''],72:[''],73:[''],74:[''],75:[''],76:['tkn_from','tkn_id','rule_1_0'],77:[''],78:[''],79:[''],80:[''],81:[''],82:[''],83:[''],84:[''],85:[''],86:[''],87:[''],88:[''],89:[''],90:[''],91:[''],92:[''],93:[''],94:[''],95:[''],96:[''],97:[''],98:[''],99:[''],100:[''],101:[''],102:[''],
 
 103:[''],104:[''],105:[''],106:[''],107:[''],108:[''],109:[''],110:[''],111:['tkn_inner_join','id_sim','tkn_on','id_sim','tkn_=','id_sim','J'],112:[''],113:['vacio'],114:['vacio'],115:[''],116:[''],117:[''],118:[''],119:[''],120:[''],121:[''],122:[''],123:[''],124:[''],125:[''],126:[''],127:[''],128:[''],129:[''],130:[''],131:[''],132:[''],133:[''],134:[''],135:[''],136:['vacio'],
 
@@ -190,7 +241,7 @@ table_syntactic = {
 
 171:[''],172:[''],173:[''],174:[''],175:[''],176:[''],177:[''],178:[''],179:[''],180:[''],181:[''],182:['tkn_group_by','ids','tkn_order_by','ids'],183:['tkn_group_by','ids','tkn_order_by','ids'],184:[''],185:[''],186:[''],187:[''],188:[''],189:[''],190:[''],191:[''],192:[''],193:[''],194:[''],195:[''],196:[''],197:[''],198:[''],199:[''],200:[''],201:[''],202:[''],203:[''],204:['vacio'],
 
-205:[''],206:[''],207:[''],208:[''],209:[''],210:[''],211:[''],212:[''],213:[''],214:[''],215:[''],216:[''],217:[''],218:[''],219:[''],220:[''],221:['id_sim','tkn_values','tkn_(','valores','tkn_)'],222:[''],223:[''],224:[''],225:[''],226:[''],227:[''],228:[''],229:[''],230:[''],231:[''],232:[''],233:[''],234:[''],235:[''],236:[''],237:[''],238:[''],
+205:[''],206:[''],207:[''],208:[''],209:[''],210:[''],211:[''],212:[''],213:[''],214:[''],215:[''],216:[''],217:[''],218:[''],219:[''],220:[''],221:['tkn_id','rule_2_0','tkn_values','tkn_(','valores','tkn_)'],222:[''],223:[''],224:[''],225:[''],226:[''],227:[''],228:[''],229:[''],230:[''],231:[''],232:[''],233:[''],234:[''],235:[''],236:[''],237:[''],238:[''],
 
 239:[''],240:[''],241:[''],242:[''],243:[''],244:[''],245:[''],246:[''],247:[''],248:[''],249:[''],250:[''],251:[''],252:[''],253:[''],254:[''],255:['id_sim','tkn_set','sets'],256:[''],257:[''],258:[''],259:[''],260:[''],261:[''],262:[''],263:[''],264:[''],265:[''],266:[''],267:[''],268:[''],269:[''],270:[''],271:[''],272:[''],
 
@@ -200,17 +251,17 @@ table_syntactic = {
 
 341:[''],342:[''],343:[''],344:[''],345:[''],346:[''],347:[''],348:[''],349:[''],350:[''],351:[''],352:[''],353:[''],354:[''],355:[''],356:[''],357:[''],358:[''],359:[''],360:[''],361:[''],362:[''],363:[''],364:[''],365:[''],366:[''],367:[''],368:[''],369:['tkn_int'],370:['tkn_float'],371:['tkn_time'],372:['tkn_date'],373:[''],374:[''],
 
-375:[''],376:[''],377:[''],378:[''],379:[''],380:[''],381:[''],382:[''],383:[''],384:[''],385:[''],386:[''],387:[''],388:[''],389:[''],390:[''],391:[''],392:[''],393:[''],394:[''],395:[''],396:[''],397:[''],398:[''],399:[''],400:[''],401:[''],402:[''],403:['numeros'],404:['numeros'],405:['numeros'],406:['numeros'],407:['tkn_varchar'],408:[''],
+375:[''],376:[''],377:[''],378:[''],379:[''],380:[''],381:[''],382:[''],383:[''],384:[''],385:[''],386:[''],387:[''],388:[''],389:[''],390:[''],391:[''],392:[''],393:[''],394:[''],395:[''],396:[''],397:[''],398:[''],399:[''],400:[''],401:[''],402:[''],403:['numeros','rule_2_0_1'],404:['numeros','rule_2_0_2'],405:['numeros','rule_2_0_3'],406:['numeros','rule_2_0_4'],407:['tkn_varchar','rule_2_0_5'],408:[''],
 
-409:[''],410:[''],411:[''],412:[''],413:[''],414:[''],415:[''],416:[''],417:[''],418:[''],419:[''],420:[''],421:[''],422:[''],423:[''],424:[''],425:[''],426:[''],427:[''],428:['vacio'],429:[''],430:[''],431:[''],432:[''],433:[''],434:[''],435:[''],436:['tkn_,','valor_s','valor_c'],437:[''],438:[''],439:[''],440:[''],441:[''],442:[''],
+409:[''],410:[''],411:[''],412:[''],413:[''],414:[''],415:[''],416:[''],417:[''],418:[''],419:[''],420:[''],421:[''],422:[''],423:[''],424:[''],425:[''],426:[''],427:[''],428:['vacio'],429:[''],430:[''],431:[''],432:[''],433:[''],434:[''],435:[''],436:['tkn_,','valor_s','valor_c','rule_2_1'],437:[''],438:[''],439:[''],440:[''],441:[''],442:[''],
 
 443:[''],444:[''],445:[''],446:[''],447:[''],448:[''],449:[''],450:[''],451:[''],452:[''],453:[''],454:[''],455:[''],456:[''],457:[''],458:[''],459:[''],460:[''],461:[''],462:[''],463:[''],464:[''],465:[''],466:[''],467:[''],468:[''],469:[''],470:[''],471:['valor_s','valor_c'],472:['valor_s','valor_c'],473:['valor_s','valor_c'],474:['valor_s','valor_c'],475:['valor_s','valor_c'],476:[''],
 
-477:[''],478:[''],479:[''],480:[''],481:[''],482:[''],483:[''],484:['vacio'],485:['vacio'],486:['vacio'],487:['vacio'],488:['vacio'],489:['vacio'],490:['vacio'],491:['vacio'],492:[''],493:[''],494:['tkn_.','tkn_id'],495:[''],496:['vacio'],497:['vacio'],498:['vacio'],499:['vacio'],500:['vacio'],501:['vacio'],502:['vacio'],503:['vacio'],504:['vacio'],505:[''],506:[''],507:[''],508:[''],509:[''],510:['vacio'],
+477:[''],478:[''],479:[''],480:[''],481:[''],482:[''],483:[''],484:['vacio'],485:['vacio'],486:['vacio'],487:['vacio'],488:['vacio'],489:['vacio'],490:['vacio'],491:['vacio'],492:[''],493:[''],494:['tkn_.','tkn_id','rule_0_0'],495:[''],496:['vacio'],497:['vacio'],498:['vacio'],499:['vacio'],500:['vacio'],501:['vacio'],502:['vacio'],503:['vacio'],504:['vacio'],505:[''],506:[''],507:[''],508:[''],509:[''],510:['vacio'],
 
-511:[''],512:[''],513:[''],514:[''],515:[''],516:[''],517:[''],518:[''],519:[''],520:[''],521:[''],522:[''],523:[''],524:[''],525:[''],526:[''],527:['tkn_id','id_tmp'],528:[''],529:[''],530:[''],531:[''],532:[''],533:[''],534:[''],535:[''],536:[''],537:[''],538:[''],539:[''],540:[''],541:[''],542:[''],543:[''],544:[''],
+511:[''],512:[''],513:[''],514:[''],515:[''],516:[''],517:[''],518:[''],519:[''],520:[''],521:[''],522:[''],523:[''],524:[''],525:[''],526:[''],527:['tkn_id','id_tmp','rule_0_1'],528:[''],529:[''],530:[''],531:[''],532:[''],533:[''],534:[''],535:[''],536:[''],537:[''],538:[''],539:[''],540:[''],541:[''],542:[''],543:[''],544:[''],
 
-545:[''],546:[''],547:[''],548:[''],549:[''],550:[''],551:[''],552:['vacio'],553:['vacio'],554:[''],555:['vacio'],556:['vacio'],557:['vacio'],558:['vacio'],559:[''],560:[''],561:[''],562:[''],563:[''],564:['vacio'],565:[''],566:[''],567:[''],568:[''],569:[''],570:[''],571:[''],572:['tkn_,','id_sim','id_com'],573:[''],574:[''],575:[''],576:[''],577:[''],578:['vacio'],
+545:[''],546:[''],547:[''],548:[''],549:[''],550:[''],551:[''],552:['vacio'],553:['vacio'],554:[''],555:['vacio'],556:['vacio'],557:['vacio'],558:['vacio'],559:[''],560:[''],561:[''],562:[''],563:[''],564:['vacio'],565:[''],566:[''],567:[''],568:[''],569:[''],570:[''],571:[''],572:['tkn_,','id_sim',"rule_0_2",'id_com'],573:[''],574:[''],575:[''],576:[''],577:[''],578:['vacio'],
 
 579:[''],580:[''],581:[''],582:[''],583:[''],584:[''],585:[''],586:[''],587:[''],588:[''],589:[''],590:[''],591:[''],592:[''],593:[''],594:[''],595:['id_sim','id_com'],596:[''],597:[''],598:[''],599:[''],600:[''],601:[''],602:[''],603:[''],604:[''],605:[''],606:[''],607:[''],608:[''],609:[''],610:[''],611:[''],612:['vacio'],
 
@@ -218,13 +269,13 @@ table_syntactic = {
 
 647:[''],648:[''],649:[''],650:[''],651:[''],652:[''],653:[''],654:[''],655:[''],656:[''],657:[''],658:[''],659:[''],660:[''],661:[''],662:[''],663:['id_sim'],664:[''],665:[''],666:[''],667:[''],668:[''],669:[''],670:[''],671:[''],672:[''],673:[''],674:[''],675:['valor_s'],676:['valor_s'],677:['valor_s'],678:['valor_s'],679:['valor_s'],680:[''],
 
-681:[''],682:[''],683:[''],684:[''],685:[''],686:[''],687:[''],688:[''],689:[''],690:[''],691:[''],692:[''],693:[''],694:[''],695:[''],696:[''],697:['id_sim','op_com','id_val'],698:[''],699:[''],700:[''],701:[''],702:[''],703:[''],704:[''],705:[''],706:[''],707:[''],708:[''],709:[''],710:[''],711:[''],712:[''],713:[''],714:[''],
+681:[''],682:[''],683:[''],684:[''],685:[''],686:[''],687:[''],688:[''],689:[''],690:[''],691:[''],692:[''],693:[''],694:[''],695:[''],696:[''],697:['id_sim','rule_4_0','op_com','id_val','rule_4_1'],698:[''],699:[''],700:[''],701:[''],702:[''],703:[''],704:[''],705:[''],706:[''],707:[''],708:[''],709:[''],710:[''],711:[''],712:[''],713:[''],714:[''],
 
 715:[''],716:[''],717:[''],718:[''],719:[''],720:[''],721:[''],722:[''],723:[''],724:[''],725:[''],726:['vacio'],727:[''],728:[''],729:[''],730:[''],731:[''],732:[''],733:[''],734:[''],735:['op_rel','cond_sim','cond_com'],736:['op_rel','cond_sim','cond_com'],737:[''],738:[''],739:[''],740:[''],741:[''],742:[''],743:[''],744:[''],745:[''],746:[''],747:[''],748:['vacio'],
 
 749:[''],750:[''],751:[''],752:[''],753:[''],754:[''],755:[''],756:[''],757:[''],758:[''],759:[''],760:[''],761:[''],762:[''],763:[''],764:[''],765:['cond_sim','cond_com'],766:[''],767:[''],768:[''],769:[''],770:[''],771:[''],772:[''],773:[''],774:[''],775:[''],776:[''],777:[''],778:[''],779:[''],780:[''],781:[''],782:[''],
 
-783:[''],784:[''],785:[''],786:[''],787:[''],788:[''],789:[''],790:[''],791:[''],792:[''],793:[''],794:[''],795:[''],796:[''],797:[''],798:[''],799:['id_sim','tkn_=','valor_s'],800:[''],801:[''],802:[''],803:[''],804:[''],805:[''],806:[''],807:[''],808:[''],809:[''],810:[''],811:[''],812:[''],813:[''],814:[''],815:[''],816:[''],
+783:[''],784:[''],785:[''],786:[''],787:[''],788:[''],789:[''],790:[''],791:[''],792:[''],793:[''],794:[''],795:[''],796:[''],797:[''],798:[''],799:['id_sim','rule_3_0','tkn_=','valor_s','rule_3_1'],800:[''],801:[''],802:[''],803:[''],804:[''],805:[''],806:[''],807:[''],808:[''],809:[''],810:[''],811:[''],812:[''],813:[''],814:[''],815:[''],816:[''],
 
 817:[''],818:[''],819:[''],820:[''],821:[''],822:[''],823:[''],824:[''],825:[''],826:[''],827:['vacio'],828:[''],829:[''],830:[''],831:[''],832:[''],833:[''],834:[''],835:[''],836:[''],837:[''],838:[''],839:[''],840:[''],841:[''],842:[''],843:[''],844:['tkn_,','set_sim','set_com'],845:[''],846:[''],847:[''],848:[''],849:[''],850:['vacio'],
 
@@ -233,14 +284,281 @@ table_syntactic = {
 
 
 
+
+
+class NoTerminal:
+    def __init__(self):
+        self.lexem = None  #  acceder a  TS en la pos "lexema"
+        self.type = None
+        self.value = None
+        self.ifTC = None
+        self.tam = None
+
+# Inicializar No Terminales
+# -----------------------------------------------------------------------------
+op_rel = NoTerminal()
+op_com = NoTerminal()
+numeros = NoTerminal()
+valor_s = NoTerminal()
+valor_c = NoTerminal()
+# valores = NoTerminal()
+id_tmp = NoTerminal()
+id_sim = NoTerminal()
+id_com = NoTerminal()
+# ids = NoTerminal()
+id_val = NoTerminal()
+cond_sim = NoTerminal()
+cond_com = NoTerminal()
+conditions = NoTerminal()
+set_sim = NoTerminal()
+set_com = NoTerminal()
+sets = NoTerminal()
+id_table=NoTerminal()
+ids=[]
+valores=[]
+
+# Reglas Semanticas
+def operacion(objeto1,objeto2,operador):
+    if operador == '+':
+        return objeto1 + objeto2
+    elif operador == '-':
+        return objeto1 - objeto2
+    elif operador == '=':
+        return objeto1 == objeto2
+    elif operador == '!=':
+        return objeto1 != objeto2
+    elif operador == '>=':
+        return objeto1 >= objeto2
+    elif operador == '<=':
+        return objeto1 <= objeto2
+    elif operador == '>':
+        return objeto1 > objeto2
+    elif operador == '<':
+        return objeto1 < objeto2
+
+def get_value(id):
+    return table_sim[id]['value']
+
+def get_lexema(id):
+    return table_sim[id]['lexem']
+
+def get_ifTC(id):
+    return table_sim[id]['ifTC']
+
+def get_type(id):
+    return table_sim[id]['type']
+
+def set_value(id,value):
+    table_sim[id]['value'] = value
+
+def set_type(id,type):
+    table_sim[id]['type'] = type
+
+#tabla 0 - col 1
+def set_ifTC(id,val):
+    table_sim[id]['ifTC'] = val 
+
+# regla 0.0
+# operaciones aritmeticas
+def rule_op_ari(objeto1, objeto2,operador):
+    if objeto1.type == objeto2.type:
+        objeto1.value = operacion (objeto1.value,objeto2.value,operador.lexema)
+        return objeto1
+    print ("Error de type")
+
+# Operaciones comparacion
+def rule_op_rel(objeto1, objeto2,objeto3, operador):
+    if objeto1.type == objeto2.type:
+        objeto3.value = operacion(objeto1.value, objeto2.value, operador.lexema)
+        objeto3.type = 'tkn_bool'
+    else:
+        print ("Error de types")
+
+#definiciones que ayudan
+def rule_op(objeto1, objeto2, objeto3):
+    objeto_rpta= Noterminal()
+    if get_type(objeto1.lex) == get_type(objeto2.lex):
+        objeto_val=operacion(objeto1, objeto2, objeto3)
+        set_value(objeto_rpta, objeto_val)
+        return objeto_rpta
+    else:
+        print("tipos de valores son diferentes!")
+
+def is_table_and_col(objeto1, objeto2):
+    objeto_rpta=NoTerminal()
+    if get_ifTC(objeto1.lex) == 0  and  get_ifTC(objeto2.lex)==1:
+        tipo_objeto= get_type(objeto2.lex)
+        set_type(tipo_objeto, objeto2.lex)
+        obeto_rpta.lex=objeto2.lex
+    return objeto_rpta    
+    
+def is_table(objeto1):
+    tables=get_tables_ofDB()
+    tmp_table= get_value(objeto1)
+    
+    for i in range (len(tables)):
+        if tmp_table == tables[i]:
+            set_ifTC(objeto,0)
+            return True     
+    return False
+        
+def get_type_DB(objeto1,objeto2):
+    col=get_cols_of_tableDB(objeto1)
+    for i in range(len(col)):
+        # print(col[i][0]," - ",objeto2)
+        if col[i][0] == objeto2:
+            return col[i][1]
+        
+
+    
+def is_col_of_table(objeto1):
+    col=get_cols_of_tableDB(objeto1)
+    # print(col)
+    for i in range(len(col)):
+        # print(col[i][0]," - ",ids[i].value)
+        if col[i][0] != ids[i].value:
+            return False
+    return True
+
+def is_col_of_table_t(objeto1):
+    # print(objeto1)
+    col=get_cols_of_tableDB(objeto1)
+    # print(len(col))
+    if len(col) != len(valores):
+        print("numero de valores ingresado no es el mismo a la db  ")
+        return False
+    for i in range(len(col)):
+        # print(col[i][1],"-",valores[i].type,"-")
+        if col[i][1] != valores[i].type:
+            # print("salir")
+            return False
+    return True
+        
+    
+#REGLAS
+
+# def rule_0_0(objeto):
+    # print("obj: ",objeto)
+    # id_tmp.value=objeto
+
+def rule_0_1(objeto):
+    # print("obj: ",objeto)
+    
+    id_sim.value = objeto
+    new_id=NoTerminal()
+    new_id.value=id_sim.value
+    ids.append(new_id)
+    # for i in range(len(ids)):
+        # print("ids: ",ids[i].value)
+        
+    # id_sim.value = id_tmp.value
+        
+def rule_0_2(objeto):
+    for i in range(len(ids)):
+        print("ids: ",ids[i].value)
+
+def rule_1_0(objeto):
+    # print("obj: ",objeto)
+    id_table.value=objeto
+# if ids:
+    if is_col_of_table(objeto)== False:
+        print("Alguna de las columnas no son de la tabla")
+# 
+    
+def rule_2_0_1(objeto):
+    # print("obj: ",objeto)
+    new_valor=NoTerminal()
+    new_valor.value=objeto
+    new_valor.type='integer'
+    new_valor.tam=4
+    valores.append(new_valor)
+    
+def rule_2_0_2(objeto):
+    # print("obj: ",objeto)
+    new_valor=NoTerminal()
+    new_valor.value=objeto
+    new_valor.type='float'
+    new_valor.tam=8
+    valores.append(new_valor)
+
+def rule_2_0_3(objeto):
+    # print("obj: ",objeto)
+    new_valor=NoTerminal()
+    new_valor.value=objeto
+    new_valor.type='date'
+    new_valor.tam=16
+    valores.append(new_valor)
+
+def rule_2_0_4(objeto):
+    # print("obj: ",objeto)
+    new_valor=NoTerminal()
+    new_valor.value=objeto
+    new_valor.type='time'
+    new_valor.tam=32
+    valores.append(new_valor)
+
+def rule_2_0_5(objeto):
+    # print("obj: ",objeto)
+    new_valor=NoTerminal()
+    new_valor.value=objeto
+    new_valor.type='varchar'
+    new_valor.tam=256
+    valores.append(new_valor)
+
+def rule_2_0(objeto):
+    # print("obj: ",objeto)
+    id_sim.value = objeto
+
+
+def rule_2_1(objeto):
+    # print("obj: ",objeto)
+    # print("tabla", id_sim.value)
+    is_col_of_table_t(id_sim.value)
+
+# 
+def rule_3_0(objeto):
+    # print("obj: ",objeto)
+    set_com.value=objeto
+    # print("val",ids[0].value)
+    id_table= NoTerminal()
+    id_table.value=ids[0].value
+    set_com.type=get_type_DB(id_table.value,set_com.value)
+
+
+def rule_3_1(objeto):
+    # print("obj: ",objeto)
+
+    # print("tipos: ",set_com.type,"-",valores[len(valores)-1].type)
+    if set_com.type!=valores[len(valores)-1].type:
+         print("tipos de datos son diferentes")
+
+def rule_4_0(objeto):
+    # print("obj: ",objeto)
+    id_sim.value=objeto
+    # print("val",ids[0].value)
+    # print (id_table.value)
+    id_sim.type=get_type_DB(id_table.value,id_sim.value)
+    # print (id_sim.type)
+    
+def rule_4_1(objeto):
+    # print("tipos: ",id_sim.type,"-",valores[len(valores)-1].type)
+    if id_sim.type!=valores[len(valores)-1].type:
+         print("tipos de datos son diferentes")
+    #if rule_op_ari(id_sim, valores[len(valores)-1]):
+
+
+
+
+################## tabla #####################################################
 def tabla_syntac():
     while(len(l_imput)>0) :
         print ("Pila:", pila[::-1])
-        print ("lexema:", l_lexem)
+        # print ("lexema:", l_lexem)
         
         if pila[0] in terminals:
             if (l_imput[0] == pila[0]):
-                print("- ",l_imput[0],pila[0])
+                # print(l_imput[0]," - ",pila[0]," - ",l_lexem[0])
+                tmp=l_lexem[0]
                 if l_imput[0] == '$' and pila[0] == '$':
                     print("String acepted")
                 pila.pop(0)
@@ -252,34 +570,31 @@ def tabla_syntac():
                 l_imput.pop(0)
                 l_lexem.pop(0)
 
+        elif pila[0] in no_terminals:
+            # saco y pongo al revez
+            row = no_terminals[pila[0]] - 1
+
+            col = terminals[l_imput[0]]
+           # print("row ",row," col ",col,   "data", row * 34 + col)
+            empila = table_syntactic[row * 34 + col]
+            empilar = empila[::-1]
+            # print ('empila: ', empilar)
+            pila.pop(0)
+            for j in range(0,len(empilar)):
+                if(empilar[j] == ''):
+                    print("Error syntactic:  Token was not expected inn the Table Syntactic ",l_imput[0])
+                    l_imput.pop(0)
+                    l_lexem.pop(0)
+                    # print ("e:" ,l_imput)
+                    # print ("l:" ,l_lexem)
+                elif(empilar[j] != 'vacio'):
+                    pila.insert(0,empilar[j])
+
         else:
-            #Si es entero -> es regla Ejécutala (con q params?)
-            if pila[0].isdigit():
-                pila.pop(0)
-            else:
-                # saco y pongo al revez
-                row = no_terminals[pila[0]] - 1
-
-                col = terminals[l_imput[0]]
-                print("row ",row," col ",col,   "data", row * 34 + col)
-                empila = table_syntactic[row * 34 + col]
-                empilar = empila[::-1]
-                print ('empila: ', empilar)
-                pila.pop(0)
-                for j in range(0,len(empilar)):
-                    if(empilar[j] == ''):
-                        print("Error syntactic:  Token was not expected inn the Table Syntactic ",l_imput[0])
-                        l_imput.pop(0)
-                        l_lexem.pop(0)
-                        # print ("e:" ,l_imput)
-                        # print ("l:" ,l_lexem)
-                    elif(empilar[j] != 'vacio'):
-                        pila.insert(0,empilar[j])
-
-
-        if not pila:
-            return
-
+            print("r-> ",pila[0])
+            globals()[pila[0]](tmp)
+            pila.pop(0)
+            
 
 
 
@@ -304,6 +619,7 @@ for x in range(0, len(list_token)):
 
 l_imput.append('$')
 l_lexem.append('$')
+# l_lexem=l_lexem[::-1]
 
 
 print ('**************************************')
