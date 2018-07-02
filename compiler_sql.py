@@ -24,7 +24,7 @@ def get_tables_ofDB():
         #    string = re.sub( re.compile("\)"),"" ,string)
 
         #string = re.sub( re.compile("\("),"" ,string)
-        splits = string.split("(")
+        splits = string.split(" (")
 
         tables.append(splits[0])
     return tables
@@ -52,10 +52,12 @@ def get_cols_of_tableDB(name_table):
                 split = splits[i].split(" ")
                 columns.append(split)
             
-            return columns
+
+    # print("column:",columns)
+    return columns
 
        # splits = splits.split(" ")
-    #print(splits)
+    
 
 
 
@@ -110,8 +112,14 @@ def preprocesing():
 
 #***************************************************************************************
 def print_lt():
-    for token in list_token:
-        print (token)
+     for token in list_token:
+         print (token)
+
+def get_tkn(valor):
+    for i in range(0,len(list_token)):
+        if list_token[i][0] == valor:
+            return list_token[i][1] 
+
 #***************************************************************************************
 
 
@@ -233,7 +241,7 @@ table_syntactic = {
 
 35:[''],36:[''],37:[''],38:[''],39:['C','tkn_(','ids','tkn_)'],40:['C','tkn_(','ids','tkn_)'],41:['C','tkn_(','ids','tkn_)'],42:[''],43:[''],44:[''],45:[''],46:[''],47:[''],48:[''],49:[''],50:['tkn_*'],51:['ids'],52:[''],53:[''],54:[''],55:[''],56:[''],57:[''],58:[''],59:[''],60:[''],61:[''],62:[''],63:[''],64:[''],65:[''],66:[''],67:[''],68:[''],
 
-69:[''],70:[''],71:[''],72:[''],73:[''],74:[''],75:[''],76:['tkn_from','tkn_id','rule_1_0'],77:[''],78:[''],79:[''],80:[''],81:[''],82:[''],83:[''],84:[''],85:[''],86:[''],87:[''],88:[''],89:[''],90:[''],91:[''],92:[''],93:[''],94:[''],95:[''],96:[''],97:[''],98:[''],99:[''],100:[''],101:[''],102:[''],
+69:[''],70:[''],71:[''],72:[''],73:[''],74:[''],75:[''],76:['tkn_from','tkn_id','rule_0_4'],77:[''],78:[''],79:[''],80:[''],81:[''],82:[''],83:[''],84:[''],85:[''],86:[''],87:[''],88:[''],89:[''],90:[''],91:[''],92:[''],93:[''],94:[''],95:[''],96:[''],97:[''],98:[''],99:[''],100:[''],101:[''],102:[''],
 
 103:[''],104:[''],105:[''],106:[''],107:[''],108:[''],109:[''],110:[''],111:['tkn_inner_join','id_sim','tkn_on','id_sim','tkn_=','id_sim','J'],112:[''],113:['vacio'],114:['vacio'],115:[''],116:[''],117:[''],118:[''],119:[''],120:[''],121:[''],122:[''],123:[''],124:[''],125:[''],126:[''],127:[''],128:[''],129:[''],130:[''],131:[''],132:[''],133:[''],134:[''],135:[''],136:['vacio'],
 
@@ -243,7 +251,7 @@ table_syntactic = {
 
 205:[''],206:[''],207:[''],208:[''],209:[''],210:[''],211:[''],212:[''],213:[''],214:[''],215:[''],216:[''],217:[''],218:[''],219:[''],220:[''],221:['tkn_id','rule_2_0','tkn_values','tkn_(','valores','tkn_)'],222:[''],223:[''],224:[''],225:[''],226:[''],227:[''],228:[''],229:[''],230:[''],231:[''],232:[''],233:[''],234:[''],235:[''],236:[''],237:[''],238:[''],
 
-239:[''],240:[''],241:[''],242:[''],243:[''],244:[''],245:[''],246:[''],247:[''],248:[''],249:[''],250:[''],251:[''],252:[''],253:[''],254:[''],255:['id_sim','tkn_set','sets'],256:[''],257:[''],258:[''],259:[''],260:[''],261:[''],262:[''],263:[''],264:[''],265:[''],266:[''],267:[''],268:[''],269:[''],270:[''],271:[''],272:[''],
+239:[''],240:[''],241:[''],242:[''],243:[''],244:[''],245:[''],246:[''],247:[''],248:[''],249:[''],250:[''],251:[''],252:[''],253:[''],254:[''],255:['id_sim','rule_3_0','tkn_set','sets'],256:[''],257:[''],258:[''],259:[''],260:[''],261:[''],262:[''],263:[''],264:[''],265:[''],266:[''],267:[''],268:[''],269:[''],270:[''],271:[''],272:[''],
 
 273:[''],274:[''],275:[''],276:[''],277:[''],278:[''],279:[''],280:[''],281:[''],282:[''],283:[''],284:[''],285:[''],286:[''],287:[''],288:[''],289:[''],290:[''],291:[''],292:[''],293:['tkn_and'],294:['tkn_or'],295:[''],296:[''],297:[''],298:[''],299:[''],300:[''],301:[''],302:[''],303:[''],304:[''],305:[''],306:[''],
 
@@ -251,31 +259,31 @@ table_syntactic = {
 
 341:[''],342:[''],343:[''],344:[''],345:[''],346:[''],347:[''],348:[''],349:[''],350:[''],351:[''],352:[''],353:[''],354:[''],355:[''],356:[''],357:[''],358:[''],359:[''],360:[''],361:[''],362:[''],363:[''],364:[''],365:[''],366:[''],367:[''],368:[''],369:['tkn_int'],370:['tkn_float'],371:['tkn_time'],372:['tkn_date'],373:[''],374:[''],
 
-375:[''],376:[''],377:[''],378:[''],379:[''],380:[''],381:[''],382:[''],383:[''],384:[''],385:[''],386:[''],387:[''],388:[''],389:[''],390:[''],391:[''],392:[''],393:[''],394:[''],395:[''],396:[''],397:[''],398:[''],399:[''],400:[''],401:[''],402:[''],403:['numeros','rule_2_0_1'],404:['numeros','rule_2_0_2'],405:['numeros','rule_2_0_3'],406:['numeros','rule_2_0_4'],407:['tkn_varchar','rule_2_0_5'],408:[''],
+375:[''],376:[''],377:[''],378:[''],379:[''],380:[''],381:[''],382:[''],383:[''],384:[''],385:[''],386:[''],387:[''],388:[''],389:[''],390:[''],391:[''],392:[''],393:[''],394:[''],395:[''],396:[''],397:[''],398:[''],399:[''],400:[''],401:[''],402:[''],403:['numeros','rule_2_1_0'],404:['numeros','rule_2_1_1'],405:['numeros','rule_2_1_2'],406:['numeros','rule_2_1_3'],407:['tkn_varchar','rule_2_1_4'],408:[''],
 
-409:[''],410:[''],411:[''],412:[''],413:[''],414:[''],415:[''],416:[''],417:[''],418:[''],419:[''],420:[''],421:[''],422:[''],423:[''],424:[''],425:[''],426:[''],427:[''],428:['vacio'],429:[''],430:[''],431:[''],432:[''],433:[''],434:[''],435:[''],436:['tkn_,','valor_s','valor_c','rule_2_1'],437:[''],438:[''],439:[''],440:[''],441:[''],442:[''],
+409:[''],410:[''],411:[''],412:[''],413:[''],414:[''],415:[''],416:[''],417:[''],418:[''],419:[''],420:[''],421:[''],422:[''],423:[''],424:[''],425:[''],426:[''],427:[''],428:['vacio'],429:[''],430:[''],431:[''],432:[''],433:[''],434:[''],435:[''],436:['tkn_,','valor_s','rule_2_2','valor_c'],437:[''],438:[''],439:[''],440:[''],441:[''],442:[''],
 
-443:[''],444:[''],445:[''],446:[''],447:[''],448:[''],449:[''],450:[''],451:[''],452:[''],453:[''],454:[''],455:[''],456:[''],457:[''],458:[''],459:[''],460:[''],461:[''],462:[''],463:[''],464:[''],465:[''],466:[''],467:[''],468:[''],469:[''],470:[''],471:['valor_s','valor_c'],472:['valor_s','valor_c'],473:['valor_s','valor_c'],474:['valor_s','valor_c'],475:['valor_s','valor_c'],476:[''],
+443:[''],444:[''],445:[''],446:[''],447:[''],448:[''],449:[''],450:[''],451:[''],452:[''],453:[''],454:[''],455:[''],456:[''],457:[''],458:[''],459:[''],460:[''],461:[''],462:[''],463:[''],464:[''],465:[''],466:[''],467:[''],468:[''],469:[''],470:[''],471:['valor_s','valor_c','rule_2_3'],472:['valor_s','valor_c','rule_2_3'],473:['valor_s','valor_c','rule_2_3'],474:['valor_s','valor_c','rule_2_3'],475:['valor_s','valor_c','rule_2_3'],476:[''],
 
 477:[''],478:[''],479:[''],480:[''],481:[''],482:[''],483:[''],484:['vacio'],485:['vacio'],486:['vacio'],487:['vacio'],488:['vacio'],489:['vacio'],490:['vacio'],491:['vacio'],492:[''],493:[''],494:['tkn_.','tkn_id','rule_0_0'],495:[''],496:['vacio'],497:['vacio'],498:['vacio'],499:['vacio'],500:['vacio'],501:['vacio'],502:['vacio'],503:['vacio'],504:['vacio'],505:[''],506:[''],507:[''],508:[''],509:[''],510:['vacio'],
 
-511:[''],512:[''],513:[''],514:[''],515:[''],516:[''],517:[''],518:[''],519:[''],520:[''],521:[''],522:[''],523:[''],524:[''],525:[''],526:[''],527:['tkn_id','id_tmp','rule_0_1'],528:[''],529:[''],530:[''],531:[''],532:[''],533:[''],534:[''],535:[''],536:[''],537:[''],538:[''],539:[''],540:[''],541:[''],542:[''],543:[''],544:[''],
+511:[''],512:[''],513:[''],514:[''],515:[''],516:[''],517:[''],518:[''],519:[''],520:[''],521:[''],522:[''],523:[''],524:[''],525:[''],526:[''],527:['tkn_id','rule_0_1','id_tmp','rule_0_2'],528:[''],529:[''],530:[''],531:[''],532:[''],533:[''],534:[''],535:[''],536:[''],537:[''],538:[''],539:[''],540:[''],541:[''],542:[''],543:[''],544:[''],
 
-545:[''],546:[''],547:[''],548:[''],549:[''],550:[''],551:[''],552:['vacio'],553:['vacio'],554:[''],555:['vacio'],556:['vacio'],557:['vacio'],558:['vacio'],559:[''],560:[''],561:[''],562:[''],563:[''],564:['vacio'],565:[''],566:[''],567:[''],568:[''],569:[''],570:[''],571:[''],572:['tkn_,','id_sim',"rule_0_2",'id_com'],573:[''],574:[''],575:[''],576:[''],577:[''],578:['vacio'],
+545:[''],546:[''],547:[''],548:[''],549:[''],550:[''],551:[''],552:['vacio'],553:['vacio'],554:[''],555:['vacio'],556:['vacio'],557:['vacio'],558:['vacio'],559:[''],560:[''],561:[''],562:[''],563:[''],564:['vacio'],565:[''],566:[''],567:[''],568:[''],569:[''],570:[''],571:[''],572:['tkn_,','id_sim','id_com'],573:[''],574:[''],575:[''],576:[''],577:[''],578:['vacio'],
 
-579:[''],580:[''],581:[''],582:[''],583:[''],584:[''],585:[''],586:[''],587:[''],588:[''],589:[''],590:[''],591:[''],592:[''],593:[''],594:[''],595:['id_sim','id_com'],596:[''],597:[''],598:[''],599:[''],600:[''],601:[''],602:[''],603:[''],604:[''],605:[''],606:[''],607:[''],608:[''],609:[''],610:[''],611:[''],612:['vacio'],
+579:[''],580:[''],581:[''],582:[''],583:[''],584:[''],585:[''],586:[''],587:[''],588:[''],589:[''],590:[''],591:[''],592:[''],593:[''],594:[''],595:['id_sim','id_com','rule_0_3'],596:[''],597:[''],598:[''],599:[''],600:[''],601:[''],602:[''],603:[''],604:[''],605:[''],606:[''],607:[''],608:[''],609:[''],610:[''],611:[''],612:['vacio'],
 
 613:[''],614:[''],615:[''],616:[''],617:['avg'],618:['sum'],619:['count'],620:[''],621:[''],622:[''],623:[''],624:[''],625:[''],626:[''],627:[''],628:[''],629:[],630:[''],631:[''],632:[''],633:[''],634:[''],635:[''],636:[''],637:[''],638:[''],639:[''],640:[''],641:[''],642:[''],643:[''],644:[''],645:[''],646:[''],
 
-647:[''],648:[''],649:[''],650:[''],651:[''],652:[''],653:[''],654:[''],655:[''],656:[''],657:[''],658:[''],659:[''],660:[''],661:[''],662:[''],663:['id_sim'],664:[''],665:[''],666:[''],667:[''],668:[''],669:[''],670:[''],671:[''],672:[''],673:[''],674:[''],675:['valor_s'],676:['valor_s'],677:['valor_s'],678:['valor_s'],679:['valor_s'],680:[''],
+647:[''],648:[''],649:[''],650:[''],651:[''],652:[''],653:[''],654:[''],655:[''],656:[''],657:[''],658:[''],659:[''],660:[''],661:[''],662:[''],663:['tkn_id'],664:[''],665:[''],666:[''],667:[''],668:[''],669:[''],670:[''],671:[''],672:[''],673:[''],674:[''],675:['valor_s'],676:['valor_s'],677:['valor_s'],678:['valor_s'],679:['valor_s'],680:[''],
 
-681:[''],682:[''],683:[''],684:[''],685:[''],686:[''],687:[''],688:[''],689:[''],690:[''],691:[''],692:[''],693:[''],694:[''],695:[''],696:[''],697:['id_sim','rule_4_0','op_com','id_val','rule_4_1'],698:[''],699:[''],700:[''],701:[''],702:[''],703:[''],704:[''],705:[''],706:[''],707:[''],708:[''],709:[''],710:[''],711:[''],712:[''],713:[''],714:[''],
+681:[''],682:[''],683:[''],684:[''],685:[''],686:[''],687:[''],688:[''],689:[''],690:[''],691:[''],692:[''],693:[''],694:[''],695:[''],696:[''],697:['tkn_id','rule_4_0','op_com','rule_4_0_','id_val','rule_4_1',],698:[''],699:[''],700:[''],701:[''],702:[''],703:[''],704:[''],705:[''],706:[''],707:[''],708:[''],709:[''],710:[''],711:[''],712:[''],713:[''],714:[''],
 
 715:[''],716:[''],717:[''],718:[''],719:[''],720:[''],721:[''],722:[''],723:[''],724:[''],725:[''],726:['vacio'],727:[''],728:[''],729:[''],730:[''],731:[''],732:[''],733:[''],734:[''],735:['op_rel','cond_sim','cond_com'],736:['op_rel','cond_sim','cond_com'],737:[''],738:[''],739:[''],740:[''],741:[''],742:[''],743:[''],744:[''],745:[''],746:[''],747:[''],748:['vacio'],
 
-749:[''],750:[''],751:[''],752:[''],753:[''],754:[''],755:[''],756:[''],757:[''],758:[''],759:[''],760:[''],761:[''],762:[''],763:[''],764:[''],765:['cond_sim','cond_com'],766:[''],767:[''],768:[''],769:[''],770:[''],771:[''],772:[''],773:[''],774:[''],775:[''],776:[''],777:[''],778:[''],779:[''],780:[''],781:[''],782:[''],
+749:[''],750:[''],751:[''],752:[''],753:[''],754:[''],755:[''],756:[''],757:[''],758:[''],759:[''],760:[''],761:[''],762:[''],763:[''],764:[''],765:['cond_sim','cond_com','rule_4_2'],766:[''],767:[''],768:[''],769:[''],770:[''],771:[''],772:[''],773:[''],774:[''],775:[''],776:[''],777:[''],778:[''],779:[''],780:[''],781:[''],782:[''],
 
-783:[''],784:[''],785:[''],786:[''],787:[''],788:[''],789:[''],790:[''],791:[''],792:[''],793:[''],794:[''],795:[''],796:[''],797:[''],798:[''],799:['id_sim','rule_3_0','tkn_=','valor_s','rule_3_1'],800:[''],801:[''],802:[''],803:[''],804:[''],805:[''],806:[''],807:[''],808:[''],809:[''],810:[''],811:[''],812:[''],813:[''],814:[''],815:[''],816:[''],
+783:[''],784:[''],785:[''],786:[''],787:[''],788:[''],789:[''],790:[''],791:[''],792:[''],793:[''],794:[''],795:[''],796:[''],797:[''],798:[''],799:['id_sim','rule_3_1','tkn_=','valor_s','rule_3_2'],800:[''],801:[''],802:[''],803:[''],804:[''],805:[''],806:[''],807:[''],808:[''],809:[''],810:[''],811:[''],812:[''],813:[''],814:[''],815:[''],816:[''],
 
 817:[''],818:[''],819:[''],820:[''],821:[''],822:[''],823:[''],824:[''],825:[''],826:[''],827:['vacio'],828:[''],829:[''],830:[''],831:[''],832:[''],833:[''],834:[''],835:[''],836:[''],837:[''],838:[''],839:[''],840:[''],841:[''],842:[''],843:[''],844:['tkn_,','set_sim','set_com'],845:[''],846:[''],847:[''],848:[''],849:[''],850:['vacio'],
 
@@ -293,19 +301,30 @@ class NoTerminal:
         self.value = None
         self.ifTC = None
         self.tam = None
+        self.idss= []
+        self.code= ""
 
 # Inicializar No Terminales
 # -----------------------------------------------------------------------------
+A = NoTerminal()
+S = NoTerminal()
+C = NoTerminal()
+F = NoTerminal()
+J = NoTerminal()
+W = NoTerminal()
+G = NoTerminal()
+I = NoTerminal()
+U = NoTerminal()
 op_rel = NoTerminal()
 op_com = NoTerminal()
 numeros = NoTerminal()
 valor_s = NoTerminal()
 valor_c = NoTerminal()
-# valores = NoTerminal()
+valores = NoTerminal()
 id_tmp = NoTerminal()
 id_sim = NoTerminal()
 id_com = NoTerminal()
-# ids = NoTerminal()
+ids = NoTerminal()
 id_val = NoTerminal()
 cond_sim = NoTerminal()
 cond_com = NoTerminal()
@@ -314,8 +333,7 @@ set_sim = NoTerminal()
 set_com = NoTerminal()
 sets = NoTerminal()
 id_table=NoTerminal()
-ids=[]
-valores=[]
+_id_sim=NoTerminal()
 
 # Reglas Semanticas
 def operacion(objeto1,objeto2,operador):
@@ -394,166 +412,243 @@ def is_table_and_col(objeto1, objeto2):
     
 def is_table(objeto1):
     tables=get_tables_ofDB()
-    tmp_table= get_value(objeto1)
-    
+    table_lexem= objeto1
     for i in range (len(tables)):
-        if tmp_table == tables[i]:
-            set_ifTC(objeto,0)
+        # print("(",table_lexem,"-",tables[i],")")
+        if table_lexem == tables[i]:
             return True     
     return False
         
 def get_type_DB(objeto1,objeto2):
     col=get_cols_of_tableDB(objeto1)
     for i in range(len(col)):
-        # print(col[i][0]," - ",objeto2)
+        print(col[i][0]," - ",objeto2)
         if col[i][0] == objeto2:
+            # print("col: ",col[i][1])
             return col[i][1]
         
-
     
-def is_col_of_table(objeto1):
+def is_col_of_table(objeto1, objeto2):
     col=get_cols_of_tableDB(objeto1)
-    # print(col)
-    for i in range(len(col)):
-        # print(col[i][0]," - ",ids[i].value)
-        if col[i][0] != ids[i].value:
+    # print("col:", col)
+    for i in range (len(objeto2)):
+        found= 0
+        for j in range(len(col)):
+            # print(objeto2[i].lexem,"-",col[j][0])
+            if objeto2[i].lexem == col[j][0]:
+                found = 1
+        if found == 0:
             return False
     return True
 
-def is_col_of_table_t(objeto1):
-    # print(objeto1)
+def is_col_of_table_(objeto1, objeto2):
+    col=get_cols_of_tableDB(objeto1)
+    # print("col:", col)
+    for j in range(len(col)):
+        print(objeto2.lexem,"-",col[j][0])
+        if objeto2.lexem == col[j][0]:
+            return True
+    return False
+
+
+def is_col_of_table_t(objeto1,objeto2):
+    print(objeto1)
     col=get_cols_of_tableDB(objeto1)
     # print(len(col))
-    if len(col) != len(valores):
+    if len(col) != len(objeto2):
         print("numero de valores ingresado no es el mismo a la db  ")
         return False
     for i in range(len(col)):
         # print(col[i][1],"-",valores[i].type,"-")
-        if col[i][1] != valores[i].type:
-            # print("salir")
+        if col[i][1] != objeto2[i].type:
             return False
     return True
         
     
 #REGLAS
 
-# def rule_0_0(objeto):
-    # print("obj: ",objeto)
-    # id_tmp.value=objeto
+def rule_0_0(objeto):
+    print("obj: ",objeto)
+    id_tmp.lexem=objeto
+    # print("id_tmp.lexem: ",id_tmp.lexem)
+
 
 def rule_0_1(objeto):
-    # print("obj: ",objeto)
-    
-    id_sim.value = objeto
-    new_id=NoTerminal()
-    new_id.value=id_sim.value
-    ids.append(new_id)
-    # for i in range(len(ids)):
-        # print("ids: ",ids[i].value)
-        
-    # id_sim.value = id_tmp.value
+    print("obj: ",objeto)
+  
+    if id_tmp.lexem == None:
+        _id_sim.lexem=objeto    
+    else:
+        _id_sim.lexem=id_tmp.lexem    
+
         
 def rule_0_2(objeto):
-    for i in range(len(ids)):
-        print("ids: ",ids[i].value)
-
-def rule_1_0(objeto):
-    # print("obj: ",objeto)
-    id_table.value=objeto
-# if ids:
-    if is_col_of_table(objeto)== False:
-        print("Alguna de las columnas no son de la tabla")
-# 
+    print("obj: ",objeto)
+    # print("id_tmp.lexem: ",id_tmp.lexem)
+    # print("_id_sim: ",_id_sim.lexem)
     
-def rule_2_0_1(objeto):
-    # print("obj: ",objeto)
+    id_sim.idss.append(_id_sim)
+    
+    if(id_tmp.lexem == None):
+        _id_sim.lexem=objeto    
+        print("ID_SIM: ",_id_sim.lexem)
+    else:
+        print("_id_sim: ",_id_sim.lexem)
+        if is_table(_id_sim.lexem) == False:
+            print("ERROR, debe ser tabla")
+        else:
+            if is_col_of_table_(_id_sim.lexem,id_tmp)==False:
+                print("algunas de las columnas no pertenece ala tabla")
+        _id_sim.lexem=id_tmp.lexem    
+
+def rule_0_3(objeto):
+    print("obj: ",objeto)
+    F.idss = id_sim.idss 
+
+
+def rule_0_4(objeto):
+    print("obj: ",objeto)
+    F.lexem=objeto
+    if is_table(F.lexem) == False:
+        print("ERROR, debe ser tabla")
+    else:
+        if is_col_of_table(F.lexem,F.idss)==False:
+            print("algunas de las columnas no pertenece ala tabla")
+
+# def rule_2_0(objeto):
+    print("obj: ",objeto)
+    valores.lexem =objeto 
+
+    
+def rule_2_1_0(objeto):
+    print("obj: ",objeto)
     new_valor=NoTerminal()
-    new_valor.value=objeto
+    new_valor.lexem=objeto
     new_valor.type='integer'
     new_valor.tam=4
-    valores.append(new_valor)
+    valor_s.idss.append(new_valor)
     
-def rule_2_0_2(objeto):
-    # print("obj: ",objeto)
+def rule_2_1_1(objeto):
+    print("obj: ",objeto)
     new_valor=NoTerminal()
-    new_valor.value=objeto
+    new_valor.lexem=objeto
     new_valor.type='float'
     new_valor.tam=8
-    valores.append(new_valor)
+    valor_s.idss.append(new_valor)
 
-def rule_2_0_3(objeto):
-    # print("obj: ",objeto)
+def rule_2_1_2(objeto):
+    print("obj: ",objeto)
     new_valor=NoTerminal()
-    new_valor.value=objeto
+    new_valor.lexem=objeto
     new_valor.type='date'
     new_valor.tam=16
-    valores.append(new_valor)
+    valor_s.idss.append(new_valor)
 
-def rule_2_0_4(objeto):
-    # print("obj: ",objeto)
+def rule_2_1_3(objeto):
+    print("obj: ",objeto)
     new_valor=NoTerminal()
-    new_valor.value=objeto
+    new_valor.lexem=objeto
     new_valor.type='time'
     new_valor.tam=32
-    valores.append(new_valor)
+    valor_s.idss.append(new_valor)
 
-def rule_2_0_5(objeto):
-    # print("obj: ",objeto)
-    new_valor=NoTerminal()
-    new_valor.value=objeto
+def rule_2_1_4(objeto):
+    print("obj: ",objeto)
+    new_valor=NoTerminal()  
+    new_valor.lexem=objeto
     new_valor.type='varchar'
     new_valor.tam=256
-    valores.append(new_valor)
-
-def rule_2_0(objeto):
-    # print("obj: ",objeto)
-    id_sim.value = objeto
+    valor_s.idss.append(new_valor)
 
 
-def rule_2_1(objeto):
-    # print("obj: ",objeto)
+def rule_2_2(objeto):
+    print("obj: ",objeto)
     # print("tabla", id_sim.value)
-    is_col_of_table_t(id_sim.value)
+    print("VALLOR")
+    for i in range(len(valor_s.idss)):
+        print(valor_s.idss[i].lexem)
+    print()
+    valores.idss=valor_s.idss
 
+def rule_2_3(objeto):
+    print("lexe",valores.lexem)
+
+    print("VALLOR")
+    for i in range(len(valores.idss)):
+        print(valores.idss[i].lexem)
+    print()
+
+
+    if is_table(valores.lexem) == False:
+        print("ERROR, debe ser tabla")
+    else:
+        if is_col_of_table_t(valores.lexem, valores.idss)==False:
+            print("ERROR, algunas de los tipos de las columnas no coincide ala tabla")
+       
+    
 # 
 def rule_3_0(objeto):
-    # print("obj: ",objeto)
-    set_com.value=objeto
-    # print("val",ids[0].value)
-    id_table= NoTerminal()
-    id_table.value=ids[0].value
-    set_com.type=get_type_DB(id_table.value,set_com.value)
-
+    print("obj: ",objeto)
+    sets.lexem=objeto
+    
 
 def rule_3_1(objeto):
-    # print("obj: ",objeto)
+    print("obj: ",objeto)
+    valor_s.lexem=objeto
 
-    # print("tipos: ",set_com.type,"-",valores[len(valores)-1].type)
-    if set_com.type!=valores[len(valores)-1].type:
-         print("tipos de datos son diferentes")
+
+def rule_3_2(objeto):
+    print("obj: ",objeto)
+
+    if is_table(sets.lexem) == False:
+        print("ERROR, debe ser tabla")
+    else:
+        if is_col_of_table_(sets.lexem, valor_s)==False:
+            print("ERROR, algunas de los tipos de las columnas no coincide ala tabla")
+
+    tipo_act=valor_s.idss[len(valor_s.idss)-1].type
+    tipo_db=get_type_DB(sets.lexem,valor_s.lexem)
+
+    if tipo_act != tipo_db:
+        print("ERROR, tipos diferentes")
+
+
+
 
 def rule_4_0(objeto):
-    # print("obj: ",objeto)
-    id_sim.value=objeto
-    # print("val",ids[0].value)
-    # print (id_table.value)
-    id_sim.type=get_type_DB(id_table.value,id_sim.value)
-    # print (id_sim.type)
+    print("obj: ",objeto)
+    cond_sim.lexem=objeto
+    # cond_com.lexem = objeto
+def rule_4_0_(objeto):
+    op_com.lexem=objeto
     
 def rule_4_1(objeto):
-    # print("tipos: ",id_sim.type,"-",valores[len(valores)-1].type)
-    if id_sim.type!=valores[len(valores)-1].type:
-         print("tipos de datos son diferentes")
-    #if rule_op_ari(id_sim, valores[len(valores)-1]):
 
+    print("obj: ",objeto)
+
+    tipo_act = valor_s.idss[len(valor_s.idss)-1].type
+    _act = valor_s.idss[len(valor_s.idss)-1].lexem
+    tipo_db= get_type_DB(F.lexem,cond_sim.lexem)
+    if tipo_act != tipo_db:
+        print("ERROR, tipos diferentes")
+    
+    cond_sim.code+=str(cond_sim.lexem)+" "+str(op_com.lexem)+" "+str(_act)+" "
+    print(cond_sim.code)
+
+def rule_4_2(objeto):
+    print("COND")
+    # for i in range(len(cond_sim.idss)):
+    #     print(cond_sim.idss[i].lexem)
+    # print()
 
 
 
 ################## tabla #####################################################
 def tabla_syntac():
+    print()
     while(len(l_imput)>0) :
         print ("Pila:", pila[::-1])
-        # print ("lexema:", l_lexem)
+        print ("lexema:", l_lexem)
         
         if pila[0] in terminals:
             if (l_imput[0] == pila[0]):
@@ -578,7 +673,7 @@ def tabla_syntac():
            # print("row ",row," col ",col,   "data", row * 34 + col)
             empila = table_syntactic[row * 34 + col]
             empilar = empila[::-1]
-            # print ('empila: ', empilar)
+            print ('empila: ', empilar)
             pila.pop(0)
             for j in range(0,len(empilar)):
                 if(empilar[j] == ''):
@@ -595,9 +690,6 @@ def tabla_syntac():
             globals()[pila[0]](tmp)
             pila.pop(0)
             
-
-
-
 
 
 preprocesing()
